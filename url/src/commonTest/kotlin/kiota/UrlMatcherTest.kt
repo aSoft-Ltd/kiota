@@ -1,4 +1,4 @@
-package captain
+package kiota
 
 import kiota.Url
 import kommander.expect

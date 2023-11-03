@@ -20,7 +20,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(libs.kase.optional)
-                api(libs.kollections.interoperable)
             }
         }
 
@@ -28,6 +27,10 @@ kotlin {
             dependencies {
                 implementation(libs.kommander.core)
             }
+        }
+
+        jvmMain.dependencies {
+            api(kotlinx.coroutines.core)
         }
     }
 }

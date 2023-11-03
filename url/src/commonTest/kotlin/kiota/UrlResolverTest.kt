@@ -1,4 +1,4 @@
-package captain
+package kiota
 
 import kiota.Url
 import kommander.expect
@@ -8,13 +8,13 @@ class UrlResolverTest {
     @Test
     fun should_be_able_to_go_back() {
         val url = Url("google.com/meet/user")
-        expect(url.resolve("..")).toBe(Url("google.com/meet"))
+        expect(url.resolve("")).toBe(Url("google.com/meet"))
     }
 
     @Test
     fun should_resolve_back_like_a_file_system_route() {
         val url = Url("google.com")
-        expect(url.resolve("..")).toBe(Url("google.com"))
+        expect(url.resolve("")).toBe(Url("google.com"))
     }
 
     @Test
