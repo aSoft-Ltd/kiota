@@ -4,7 +4,7 @@ plugins {
     id("tz.co.asoft.library")
 }
 
-description = "A kotlin multiplatform library for representing headless collection based ui such as lists, tables and grids"
+description = "A kotlin multiplatform library for representing numbers on all platforms"
 
 kotlin {
     jvm { library() }

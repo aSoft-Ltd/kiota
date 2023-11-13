@@ -13,12 +13,9 @@ fun includeSubs(base: String, path: String = base, vararg subs: String) {
     }
 }
 
-listOf(
-    "kommander", "kollections", "kevlar", "cinematic",
-    "kase"
-).forEach { includeBuild("../$it") }
+listOf("kommander", "kollections", "kase", "lexi").forEach { includeBuild("../$it") }
 
 rootProject.name = "kiota"
 
 // submodules
-includeSubs("kiota", ".", "url","sse")
+includeSubs("kiota", ".", "url", "sse", "numeral")
