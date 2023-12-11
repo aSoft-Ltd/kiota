@@ -3,7 +3,7 @@
 
 package kiota
 
-import kotlin.js.JsExport
+import kotlinx.JsExport
 
 interface SignedNumeral {
     val asInt: Int
@@ -11,7 +11,7 @@ interface SignedNumeral {
     val asFloat: Float
     val asDouble: Double
 
-    @JsExport.Ignore
+    @JsExportIgnore
     operator fun plus(other: SignedNumeral) : SignedNumeral
 
     operator fun times(other: Double) : SignedNumeral

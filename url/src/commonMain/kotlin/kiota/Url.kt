@@ -3,7 +3,7 @@
 
 package kiota
 
-import kotlin.js.JsExport
+import kotlinx.JsExport
 import kotlin.js.JsName
 
 /**

@@ -6,7 +6,7 @@ package kiota
 import kase.Optional
 import kollections.List
 import kollections.Map
-import kotlin.js.JsExport
+import kotlinx.JsExport
 
 interface UrlMatch {
     val segments: List<SegmentMatch>

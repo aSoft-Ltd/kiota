@@ -2,7 +2,7 @@
 
 package kiota
 
-import kotlin.js.JsExport
+import kotlinx.JsExport
 
 sealed interface SegmentMatch {
     val path: String
