@@ -1,6 +1,5 @@
 package kiota
 
-import kiota.Url
 import kommander.expect
 import kotlin.test.Test
 
@@ -51,6 +50,7 @@ class UrlMatcherTest {
 
     @Test
     fun should_be_able_to_get_route_params_of_dynamic_routes_defined_with_a_colon() {
+        println("colon")
         val match = Url("/test/123").matches(Url("/test/:uid"))
         val uid = match?.param("uid")?.getOrNull()
         expect(uid).toBe("123")
@@ -58,6 +58,7 @@ class UrlMatcherTest {
 
     @Test
     fun should_be_able_to_match_dynamic_routes_defined_with_curled_brackets() {
+        println("curls")
         val match = Url("/test/123").matches(Url("/test/{uid}"))
         expect(match).toBeNonNull()
     }

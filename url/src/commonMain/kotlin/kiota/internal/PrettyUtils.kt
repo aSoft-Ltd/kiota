@@ -1,7 +1,13 @@
 package kiota.internal
 
-fun Map<*, *>.pretty() = toList().joinToString(prefix = "[", separator = " , ", postfix = "]") {
-    "${it.first}=${it.second}"
+import kollections.Map
+import kollections.entries
+import kollections.joinToString
+import kollections.key
+import kollections.value
+
+fun Map<*, *>.pretty() = entries.joinToString(prefix = "[", separator = " , ", postfix = "]") {
+    "${it.key}=${it.value}"
 }
 
 fun indent(spaces: Int = 0): String {

@@ -5,6 +5,7 @@ package kiota
 
 import kotlinx.JsExport
 import kotlin.js.JsName
+import kollections.List
 
 /**
  * A representation of a Url

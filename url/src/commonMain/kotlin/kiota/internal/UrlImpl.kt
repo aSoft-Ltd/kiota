@@ -6,7 +6,23 @@ import kiota.SegmentMatch
 import kiota.Url
 import kiota.UrlMatch
 import kiota.WildCardMatch
-import kollections.toIList
+import kollections.List
+import kollections.add
+import kollections.forEach
+import kollections.get
+import kollections.getOrNull
+import kollections.indices
+import kollections.isEmpty
+import kollections.joinToString
+import kollections.last
+import kollections.lastOrNull
+import kollections.minus
+import kollections.plus
+import kollections.toList
+import kollections.toTypedArray
+import kollections.mutableSetOf
+import kollections.mutableListOf
+import kollections.size
 
 @PublishedApi
 internal class UrlImpl(
@@ -35,7 +51,7 @@ internal class UrlImpl(
             return UrlImpl(
                 scheme = protocol,
                 domain = domain,
-                segments = paths
+                segments = paths.toList()
             )
         }
     }
@@ -54,13 +70,13 @@ internal class UrlImpl(
 
     override fun sibling(url: String): Url {
         if (segments.isEmpty()) return this
-        val p = (segments - segments.last()) + url.toPaths()
+        val p = (segments - segments.last()) + url.toPaths().toList()
         return UrlImpl(scheme, domain, p)
     }
 
-    override fun at(path: String): Url = UrlImpl(scheme, domain, path.toPaths())
+    override fun at(path: String): Url = UrlImpl(scheme, domain, path.toPaths().toList())
 
-    override fun child(url: String): Url = UrlImpl(scheme, domain, segments + url.split("/").filterNot { it.isEmpty() })
+    override fun child(url: String): Url = UrlImpl(scheme, domain, segments + url.split("/").filterNot { it.isEmpty() }.toList())
 
     override val path = "/${segments.joinToString(separator = "/")}"
     override fun trail(): Url = Url(path)
@@ -76,8 +92,8 @@ internal class UrlImpl(
         var out = segments
         for (segment in path.split("/")) when {
             segment == "." -> {}
-            segment == "" -> out = out - (out.lastOrNull() ?: "")
-            else -> out = out + segment
+            segment == ".." -> out -= (out.lastOrNull() ?: "")
+            else -> out += segment
         }
         return UrlImpl(scheme, domain, out)
     }
@@ -118,7 +134,7 @@ internal class UrlImpl(
             val match = segments[i].matches(pattern.segments[i]) ?: return null
             pathMatches.add(match)
         }
-        return UrlMatch(trail(), pattern.trail(), pathMatches.toIList())
+        return UrlMatch(trail(), pattern.trail(), pathMatches.toList())
     }
 
     private fun String.matches(configPath: String): SegmentMatch? {

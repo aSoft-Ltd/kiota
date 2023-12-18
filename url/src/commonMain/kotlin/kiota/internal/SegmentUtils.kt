@@ -4,7 +4,11 @@ import kiota.DynamicParamMatch
 import kiota.ExactMatch
 import kiota.SegmentMatch
 import kiota.WildCardMatch
-import kollections.toIMap
+import kollections.Collection
+import kollections.filterIsInstance
+import kollections.forEachIndexed
+import kollections.joinToString
+import kollections.associate
 
 
 private fun SegmentMatch.toScore() = when (this) {
@@ -24,4 +28,4 @@ internal fun Collection<SegmentMatch>.toScore(): Int {
 
 internal fun Collection<SegmentMatch>.toEvaluatedUrl() = joinToString("/") { it.path }
 
-internal fun Collection<SegmentMatch>.toParams() = filterIsInstance<DynamicParamMatch>().associate { it.key to it.value }.toIMap()
+internal fun Collection<SegmentMatch>.toParams() = filterIsInstance<DynamicParamMatch>().associate { it.key to it.value }

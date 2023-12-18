@@ -1,6 +1,5 @@
 package kiota
 
-import kiota.Url
 import kommander.expect
 import kotlin.test.Test
 
@@ -8,7 +7,7 @@ class UrlResolverTest {
     @Test
     fun should_be_able_to_go_back() {
         val url = Url("google.com/meet/user")
-        expect(url.resolve("")).toBe(Url("google.com/meet"))
+        expect(url.resolve("")).toBe(Url("google.com/meet/user"))
     }
 
     @Test

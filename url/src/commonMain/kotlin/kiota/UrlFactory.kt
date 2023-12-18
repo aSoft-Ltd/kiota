@@ -3,6 +3,7 @@
 package kiota
 
 import kiota.internal.UrlImpl
+import kollections.toList
 import kotlinx.JsExport
 import kotlin.js.JsName
 

@@ -8,6 +8,7 @@ import kase.Optional
 import kase.optionalOf
 import kollections.List
 import kollections.Map
+import kollections.get
 
 @PublishedApi
 internal data class UrlMatchImpl(

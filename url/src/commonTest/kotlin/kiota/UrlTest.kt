@@ -1,6 +1,8 @@
 package kiota
 
-import kiota.Url
+import kollections.joinToString
+import kollections.listOf
+import kollections.size
 import kommander.expect
 import kotlin.test.Test
 
@@ -62,19 +64,19 @@ class UrlTest {
     @Test
     fun should_detect_paths_of_a_url_with_domain_and_protocol() {
         val url = Url("https://test.com/api/v1")
-        expect(url.segments).toBe(listOf("api", "v1"))
+        expect(url.segments.joinToString("/")).toBe("api/v1")
     }
 
     @Test
     fun should_detect_paths_of_a_url_with_domain_but_no_protocol() {
         val url = Url("test.com/api/v1")
-        expect(url.segments).toBe(listOf("api", "v1"))
+        expect(url.segments.joinToString("/")).toBe("api/v1")
     }
 
     @Test
     fun should_detect_paths_of_a_trailing_slash_url_with_domain_but_no_protocol() {
         val url = Url("test.com/api/v1/")
-        expect(url.segments).toBe(listOf("api", "v1"))
+        expect(url.segments.joinToString("/")).toBe("api/v1")
     }
 
     @Test
@@ -88,7 +90,7 @@ class UrlTest {
         val url = Url("")
         expect(url.scheme).toBe("")
         expect(url.domain).toBe("")
-        expect(url.segments).toBeEmpty()
+        expect(url.segments.size).toBe(0)
     }
 
     @Test
@@ -96,7 +98,7 @@ class UrlTest {
         val url = Url("/")
         expect(url.scheme).toBe("")
         expect(url.domain).toBe("")
-        expect(url.segments).toBeEmpty()
+        expect(url.segments.size).toBe(0)
     }
 
     @Test
@@ -121,7 +123,7 @@ class UrlTest {
     fun should_have_a_relative_path_on_a_root_like_url() {
         val url = Url("/")
         val next = url.at("/users")
-        expect(next.segments).toBe(listOf("users"))
+        expect(next.segments.joinToString("/")).toBe("users")
         expect(next).toBe(Url("", "", "users"))
     }
 
@@ -143,7 +145,7 @@ class UrlTest {
         expect(url).toBe(Url("/users"))
         expect(url.domain).toBe("")
         expect(url.scheme).toBe("")
-        expect(url.segments).toBe(listOf("users"))
+        expect(url.segments.joinToString("/")).toBe("users")
     }
 
     @Test
@@ -174,7 +176,7 @@ class UrlTest {
         val url = Url("http://localhost:4000/content.html")
         expect(url.domain).toBe("localhost:4000")
         expect(url.path).toBe("/content.html")
-        expect(url.segments).toBe(listOf("content.html"))
+        expect(url.segments.joinToString("/")).toBe("content.html")
     }
 
     @Test
