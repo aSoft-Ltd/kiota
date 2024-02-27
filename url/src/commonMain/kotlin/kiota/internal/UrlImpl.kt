@@ -8,7 +8,6 @@ import kiota.UrlMatch
 import kiota.WildCardMatch
 import kollections.List
 import kollections.add
-import kollections.forEach
 import kollections.get
 import kollections.getOrNull
 import kollections.indices
