@@ -46,17 +46,50 @@ interface Url {
      */
     val path: String
 
+    /**
+     * resolves the url with the same [root] but at the provided [path]
+     */
     fun at(path: String): Url
+
+    /**
+     * Appends adds a path segment to the current list of [segments]
+     */
     fun child(url: String): Url
+
+    /**
+     * Replaces the last path segment with the provided [url]
+     */
     fun sibling(url: String): Url
 
+    /**
+     * Resolves a path relative to this url
+     */
     fun resolve(path: String): Url
 
     @JsName("rebaseUrl")
+    /**
+     * Removes the base common base of between this [Url] and the provided [url]
+     *
+     * e.g.
+     * 1. Rebasing /posts/\* with /posts/1/test should result in /1/test
+     * 2. Rebasing /posts/{uid}/\* with /posts/1/test should result in /test
+     * 3. Rebasing / with /test/john/doe should result in /test/john/doe
+     */
     fun rebase(url: Url): Url
 
-    fun rebase(url: String) = rebase(Url(url))
+    /**
+     * Removes the base common base of between this [Url] and the provided [url]
+     *
+     * e.g.
+     * 1. Rebasing /posts/\* with /posts/1/test should result in /1/test
+     * 2. Rebasing /posts/{uid}/\* with /posts/1/test should result in /test
+     * 3. Rebasing / with /test/john/doe should result in /test/john/doe
+    */
+    fun rebase(url: String): Url
 
+    /**
+     * @return the [path] as a [Url] eliminating all its [root] ([scheme]:[domain])
+     */
     fun trail(): Url
 
     fun matches(pattern: String): UrlMatch?

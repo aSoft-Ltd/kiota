@@ -78,6 +78,7 @@ internal class UrlImpl(
     override fun child(url: String): Url = UrlImpl(scheme, domain, segments + url.split("/").filterNot { it.isEmpty() }.toList())
 
     override val path = "/${segments.joinToString(separator = "/")}"
+
     override fun trail(): Url = Url(path)
 
     override fun resolve(path: String): Url = when {
@@ -119,9 +120,10 @@ internal class UrlImpl(
         return Url(url.scheme, url.domain, *(url.segments - matchingSegments).toTypedArray())
     }
 
-    override fun rebase(url: String) = rebase(kiota.internal.UrlImpl(url))
+    override fun rebase(url: String) = rebase(UrlImpl(url))
 
     override fun matches(pattern: String): UrlMatch? = matches(UrlImpl(pattern))
+
     override fun matches(pattern: Url): UrlMatch? {
         if (pattern.path == "/" && path != "/") return null
         val p = when {

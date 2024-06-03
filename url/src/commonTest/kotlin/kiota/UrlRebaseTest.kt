@@ -1,6 +1,5 @@
 package kiota
 
-import kiota.Url
 import kommander.expect
 import kotlin.test.Test
 
