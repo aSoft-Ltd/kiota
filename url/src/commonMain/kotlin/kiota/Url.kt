@@ -6,6 +6,7 @@ package kiota
 import kotlinx.JsExport
 import kotlin.js.JsName
 import kollections.List
+import kotlinx.JsExportIgnore
 
 /**
  * A representation of a Url
@@ -105,11 +106,13 @@ interface Url {
     /**
      * @return the same url with query params
      */
+    @JsExportIgnore
     fun withParams(name: String, value: Number): Url
 
     /**
      * @return the same url with query params as provided
      */
+    @JsExportIgnore
     fun withParams(vararg params: Pair<String, String>): Url
 
     fun matches(pattern: String): UrlMatch?
