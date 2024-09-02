@@ -19,7 +19,7 @@ import kotlin.reflect.KProperty
 data class UrlMatch(
     val route: Url,
     val pattern: Url,
-    val segments: List<SegmentMatch>
+    val segments: List<SegmentMatch>,
 ) : ReadOnlyProperty<Any?, String> {
 
     val params: Map<String, String> by lazy { segments.toParams() }

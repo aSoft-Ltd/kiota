@@ -2,6 +2,7 @@
 
 package kiota
 
+import kiota.internal.QueryParamsImpl
 import kiota.internal.UrlImpl
 import kollections.toList
 import kotlinx.JsExport
@@ -17,6 +18,6 @@ inline fun Url(
     scheme: String = "",
     domain: String = "",
     vararg paths: String
-): Url = UrlImpl(scheme, domain, paths.toList())
+): Url = UrlImpl(scheme, domain, paths.toList(), QueryParamsImpl.empty)
 
 inline fun String.toUrl() = Url(this)

@@ -2,6 +2,7 @@ package kiota
 
 import kommander.expect
 import kotlin.test.Test
+import kotlin.test.fail
 
 class UrlMatcherTest {
     @Test
@@ -67,6 +68,15 @@ class UrlMatcherTest {
     fun should_be_able_to_get_route_params_of_dynamic_routes_defined_with_curled_brackets() {
         val match = Url("/test/123").matches(Url("/test/{uid}"))
         val uid = match?.param("uid")?.getOrNull()
+        expect(uid).toBe("123")
+    }
+
+    @Test
+    fun should_be_able_url_with_query_params() {
+        val match = Url("/test/123?lang=en").matches(Url("/test/{uid}")) ?: fail("Should have obtained a match")
+        val uid = match.param("uid").getOrNull()
+        val lang by match.route.params
+        expect(lang).toBe("en")
         expect(uid).toBe("123")
     }
 
