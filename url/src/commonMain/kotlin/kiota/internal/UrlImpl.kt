@@ -48,7 +48,8 @@ internal class UrlImpl(
             val segments = (split.getOrNull(0) ?: "").replace("//", "/").split("/").filter {
                 it.isNotBlank()
             }
-            val domain = segments.firstOrNull { it.isDomainLike } ?: ""
+            val first = segments.firstOrNull()
+            val domain = if (first?.isDomainLike == true) first else ""
             val paths = segments - domain
             return UrlImpl(
                 scheme = protocol,
@@ -99,6 +100,7 @@ internal class UrlImpl(
         path.startsWith("/") -> at(path)
         path.startsWith(".") -> relativePathResolver(path)
         segments.isEmpty() -> at(path)
+        Url(path).domain.isNotBlank() -> Url(path)
         else -> child(path)
     }
 

@@ -20,6 +20,12 @@ class UrlTest {
     }
 
     @Test
+    fun should_be_able_to_construct_an_email_address_url() {
+        val url = Url("test.com/me/jay@doe.com")
+        expect(url.trail().toString()).toBe("/me/jay@doe.com")
+    }
+
+    @Test
     fun should_return_a_blank_protocol_if_a_trailing_slash_url_has_no_protocol() {
         val url = Url("test.com/")
         expect(url.scheme).toBe("")

@@ -39,4 +39,22 @@ class UrlResolverTest {
         val url = Url("google.com/meet/user")
         expect(url.resolve("/john/doe")).toBe(Url("google.com/john/doe"))
     }
+
+    @Test
+    fun should_be_able_to_resolve_email_addresses() {
+        val url = Url("google.com/meet/user")
+        expect(url.resolve("/john/doe/jane@doe.com")).toBe(Url("google.com/john/doe/jane@doe.com"))
+    }
+
+    @Test
+    fun should_not_resolve_relatively_if_the_resolution_is_also_a_full_link() {
+        val url = Url("app://test.com/that/works")
+        expect(url.resolve("app://test.com/this/should/work")).toBe(Url("app://test.com/this/should/work"))
+    }
+
+    @Test
+    fun should_not_resolve_relatively_if_the_resolution_is_also_a_full_link_on_a_different_domain() {
+        val url = Url("app://test1.com/that/works")
+        expect(url.resolve("app://test2.com/this/should/work")).toBe(Url("app://test2.com/this/should/work"))
+    }
 }
