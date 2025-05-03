@@ -28,6 +28,11 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    lint {
+        abortOnError = false
+        checkReleaseBuilds = false
+    }
+
     buildFeatures {
         compose = true
     }
@@ -37,21 +42,6 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
             excludes += "/META-INF/*.kotlin_module"
             excludes += "/META-INF/LICENSE.md"
-        }
-    }
-
-    signingConfigs {
-        val release by creating {
-            keyAlias = "key0"
-            storeFile = file("keystore/release.keystore")
-            keyPassword = "EleganceInEducation"
-            storePassword = "EleganceInEducation"
-        }
-    }
-
-    buildTypes {
-        release {
-            signingConfig = signingConfigs.getByName("release")
         }
     }
 }

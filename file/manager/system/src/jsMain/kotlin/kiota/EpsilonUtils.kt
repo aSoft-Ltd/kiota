@@ -1,73 +1,125 @@
 package kiota
 
-import kase.progress.ProgressBus
-import kase.progress.VoidProgressBus
-import kollections.component1
-import koncurrent.Executor
-import koncurrent.Later
-import koncurrent.PendingLater
-import koncurrent.rejectWith
-import koncurrent.resolveWith
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.khronos.webgl.ArrayBuffer
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.get
 import org.w3c.files.Blob
 import org.w3c.files.FileReader
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 inline fun ArrayBuffer.toByteArray(): ByteArray {
     val array = Int8Array(this)
     return ByteArray(array.length) { array[it] }
 }
 
-fun FileReader.readBytesOf(
-    bus: ProgressBus = VoidProgressBus,
+//fun FileReader.readBytesOf(
+//    bus: ProgressBus = VoidProgressBus,
+//    blob: Blob,
+//    executor: Executor,
+//    actionName: String,
+//    onAbortMessage: String,
+//    onErrorMessage: String
+//): Later<ByteArray> {
+//    val later = PendingLater<ByteArray>(executor)
+//    val (reading) = bus.setStages(actionName)
+//    onprogress = {
+//        bus.updateProgress(reading(it.loaded.toDouble().toLong(), it.total.toDouble().toLong()))
+//    }
+//    onabort = {
+//        later.rejectWith(IllegalStateException(onAbortMessage))
+//    }
+//    onerror = {
+//        later.rejectWith(IllegalArgumentException(onErrorMessage))
+//    }
+//    onloadend = {
+//        when (val res = result) {
+//            is ArrayBuffer -> later.resolveWith(res.toByteArray())
+//            else -> later.rejectWith(IllegalStateException("Failed to read bytes"))
+//        }
+//    }
+//    readAsArrayBuffer(blob)
+//    return later
+//}
+
+suspend fun FileReader.readBytesOf(
     blob: Blob,
-    executor: Executor,
-    actionName: String,
     onAbortMessage: String,
-    onErrorMessage: String
-): Later<ByteArray> {
-    val later = PendingLater<ByteArray>(executor)
-    val (reading) = bus.setStages(actionName)
+    onErrorMessage: String,
+): ByteArray = suspendCancellableCoroutine { cont ->
     onprogress = {
-        bus.updateProgress(reading(it.loaded.toLong(), it.total.toLong()))
+        val done = it.loaded.toDouble().toLong()
+        val total = it.total.toDouble().toLong()
+        // TODO("Update progress: $done / $total")
     }
     onabort = {
-        later.rejectWith(IllegalStateException(onAbortMessage))
+        cont.resumeWithException(IllegalStateException(onAbortMessage))
     }
     onerror = {
-        later.rejectWith(IllegalArgumentException(onErrorMessage))
+        cont.resumeWithException(IllegalArgumentException(onErrorMessage))
     }
     onloadend = {
-        val result = result.unsafeCast<ArrayBuffer>()
-        later.resolveWith(result.toByteArray())
+        when (val res = result) {
+            is ArrayBuffer -> cont.resume(res.toByteArray())
+            else -> cont.resumeWithException(IllegalStateException("Failed to read bytes"))
+        }
     }
     readAsArrayBuffer(blob)
-    return later
 }
 
-fun FileReader.readDataUrl(
-    bus: ProgressBus = VoidProgressBus,
+suspend fun FileReader.readTextOf(
     blob: Blob,
-    executor: Executor,
-    actionName: String,
     onAbortMessage: String,
-    onErrorMessage: String
-): Later<String> {
-    val later = PendingLater<String>(executor)
-    val (reading) = bus.setStages(actionName)
+    onErrorMessage: String,
+): String = suspendCancellableCoroutine { cont ->
     onprogress = {
-        bus.updateProgress(reading(it.loaded.toLong(), it.total.toLong()))
+        val done = it.loaded.toDouble().toLong()
+        val total = it.total.toDouble().toLong()
+        ""
+        // TODO("Update progress: $done / $total")
     }
     onabort = {
-        later.rejectWith(IllegalStateException(onAbortMessage))
+        cont.resumeWithException(IllegalStateException(onAbortMessage))
     }
     onerror = {
-        later.rejectWith(IllegalArgumentException(onErrorMessage))
+        cont.resumeWithException(IllegalArgumentException(onErrorMessage))
     }
     onloadend = {
-        later.resolveWith(result.unsafeCast<String>())
+        when (val res = result) {
+            is String -> cont.resume(res)
+            else -> cont.resumeWithException(IllegalStateException("Failed to read bytes"))
+        }
     }
-    readAsDataURL(blob)
-    return later
+    readAsText(blob)
 }
+
+//fun FileReader.readDataUrl(
+//    bus: ProgressBus = VoidProgressBus,
+//    blob: Blob,
+//    executor: Executor,
+//    actionName: String,
+//    onAbortMessage: String,
+//    onErrorMessage: String
+//): Later<String> {
+//    val later = PendingLater<String>(executor)
+//    val (reading) = bus.setStages(actionName)
+//    onprogress = {
+//        val pr = reading(it.loaded.toDouble().toLong(), it.total.toDouble().toLong())
+//        bus.updateProgress(pr)
+//    }
+//    onabort = {
+//        later.rejectWith(IllegalStateException(onAbortMessage))
+//    }
+//    onerror = {
+//        later.rejectWith(IllegalArgumentException(onErrorMessage))
+//    }
+//    onloadend = {
+//        when (result) {
+//            is JsString -> later.resolveWith(result.toString())
+//            else -> later.rejectWith(IllegalStateException("Failed to read data URL"))
+//        }
+//    }
+//    readAsDataURL(blob)
+//    return later
+//}

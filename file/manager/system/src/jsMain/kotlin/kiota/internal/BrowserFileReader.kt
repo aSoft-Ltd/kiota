@@ -1,24 +1,32 @@
 package kiota.internal
 
+import org.w3c.files.FileReader
 import kiota.File
 import kiota.readBytesOf
-import koncurrent.Executor
-import koncurrent.Later
-import org.w3c.files.FileReader
+import kiota.readTextOf
 import kiota.FileReader as MppFileReader
 
 internal class BrowserFileReader : MppFileReader {
 
-    val reader: FileReader = FileReader()
+    override suspend fun readBytes(file: File): ByteArray = when (file) {
+        is FileImpl -> FileReader().readBytesOf(
+            file.wrapped,
+            onAbortMessage = "File reading of ${file.wrapped.name} has been aborted",
+            onErrorMessage = "Failed to read file: ${file.wrapped.name}"
+        ).also {
+            println("Finished reading bytes")
+        }
 
-    override fun readBytes(file: File, executor: Executor): Later<ByteArray> {
-        file as FileImpl
-        return reader.readBytesOf(
-            blob = file.wrapped,
-            executor = executor,
-            actionName = "Reading ${file.wrapped.name}",
+        else -> throw IllegalArgumentException("Unsupported file type: $file")
+    }
+
+    override suspend fun readText(file: File): String = when (file) {
+        is FileImpl -> FileReader().readTextOf(
+            file.wrapped,
             onAbortMessage = "File reading of ${file.wrapped.name} has been aborted",
             onErrorMessage = "Failed to read file: ${file.wrapped.name}"
         )
+
+        else -> throw IllegalArgumentException("Unsupported file type: $file")
     }
 }

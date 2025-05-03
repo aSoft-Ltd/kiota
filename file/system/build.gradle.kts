@@ -43,7 +43,7 @@ kotlin {
         val wasmMain by creating {
             dependsOn(commonMain)
             dependencies {
-                implementation(kotlinx.browser)
+                api(kotlinx.browser)
             }
         }
 
