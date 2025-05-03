@@ -4,20 +4,20 @@ import kiota.file.mime.Application
 import kiota.file.mime.Mime
 import kiota.file.mime.Text
 
-interface FileSaver {
+interface FileCreator {
     /**
      * Saves the file with [content] to the file system
      *
      * @return [SingleFileResponse] when the file was successfully saved
      */
-    suspend fun save(
-        content: ByteArray = byteArrayOf(),
+    suspend fun create(
+        content: ByteArray,
         name: String = "file.bin",
         type: Mime = Application.OctetStream
     ): SingleFileResponse
 
-    suspend fun save(
-        content: String = "",
+    suspend fun create(
+        content: String,
         name: String = "file.txt",
         type: Mime = Text.Plain
     ): SingleFileResponse

@@ -11,13 +11,13 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kiota.Cancelled
-import kiota.FileSaver
+import kiota.FileCreator
 import kiota.SingleFileResponse
 import kiota.file.mime.All
 import kiota.file.mime.Mime
 import java.io.OutputStream
 
-class AndroidFileSaver(private val activity: ComponentActivity) : FileSaver {
+class AndroidFileCreator(private val activity: ComponentActivity) : FileCreator {
     private var scope: CoroutineScope? = null
     private var launcher: ActivityResultLauncher<String>? = null
     private val results by lazy { Channel<Uri?>() }
@@ -30,11 +30,11 @@ class AndroidFileSaver(private val activity: ComponentActivity) : FileSaver {
         }
     }
 
-    override suspend fun save(content: ByteArray, name: String, type: Mime) = save(name) {
+    override suspend fun create(content: ByteArray, name: String, type: Mime) = save(name) {
         write(content)
     }
 
-    override suspend fun save(content: String, name: String, type: Mime) = save(name) {
+    override suspend fun create(content: String, name: String, type: Mime) = save(name) {
         val w = writer()
         w.append(content)
         w.flush()

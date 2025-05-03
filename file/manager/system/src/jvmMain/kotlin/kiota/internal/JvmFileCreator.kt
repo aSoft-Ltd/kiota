@@ -4,7 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kiota.Cancelled
-import kiota.FileSaver
+import kiota.FileCreator
 import kiota.SingleFileResponse
 import kiota.file.mime.Mime
 import java.io.File
@@ -12,7 +12,7 @@ import javax.swing.JFileChooser
 import javax.swing.SwingUtilities
 import kotlin.coroutines.resume
 
-internal class JvmFileSaver : FileSaver {
+internal class JvmFileCreator : FileCreator {
 
     private suspend fun directory(): File? {
         val chooser = JFileChooser().apply {
@@ -42,7 +42,7 @@ internal class JvmFileSaver : FileSaver {
         }
     }
 
-    override suspend fun save(content: ByteArray, name: String, type: Mime) = file(name) { writeBytes(content) }
+    override suspend fun create(content: ByteArray, name: String, type: Mime) = file(name) { writeBytes(content) }
 
-    override suspend fun save(content: String, name: String, type: Mime) = file(name) { writeText(content) }
+    override suspend fun create(content: String, name: String, type: Mime) = file(name) { writeText(content) }
 }

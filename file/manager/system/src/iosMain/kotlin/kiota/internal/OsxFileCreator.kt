@@ -20,13 +20,13 @@ import platform.UniformTypeIdentifiers.UTTypeFolder
 import platform.darwin.NSObject
 import kiota.Cancelled
 import kiota.Failure
-import kiota.FileSaver
+import kiota.FileCreator
 import kiota.SingleFileResponse
 import kiota.file.mime.Mime
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
-class OsxFileSaver : FileSaver {
+class OsxFileCreator : FileCreator {
 
     private var host: UIViewController? = null
     private val results = Channel<NSURL?>()
@@ -65,7 +65,7 @@ class OsxFileSaver : FileSaver {
         directory
     }
 
-    override suspend fun save(content: ByteArray, name: String, type: Mime): SingleFileResponse {
+    override suspend fun create(content: ByteArray, name: String, type: Mime): SingleFileResponse {
         val dir = directory() ?: return Cancelled
 
         val url = dir.URLByAppendingPathComponent(name) ?: return Failure(errors = emptyList()).also {
@@ -85,7 +85,7 @@ class OsxFileSaver : FileSaver {
         }
     }
 
-    override suspend fun save(content: String, name: String, type: Mime) = save(
+    override suspend fun create(content: String, name: String, type: Mime) = save(
         content = content.encodeToByteArray(),
         name = name,
         type = type

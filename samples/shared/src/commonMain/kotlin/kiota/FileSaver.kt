@@ -22,7 +22,7 @@ internal fun FileSaver(files: FileManager) {
         onClick = {
             scope.launch {
                 message = "Saving file, please wait..."
-                val result = files.save(content = "Saved from samples", name = "sample.txt")
+                val result = files.create(content = "Saved from samples", name = "sample.txt")
                 message = when (result) {
                     is File -> {
                         saved = result

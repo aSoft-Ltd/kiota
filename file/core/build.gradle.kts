@@ -32,18 +32,19 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(libs.koncurrent.later.core)
-                api(kotlinx.coroutines.core)
-                api(libs.kase.core)
+//                api(libs.koncurrent.later.core)
+//                api(kotlinx.coroutines.core)
+//                api(libs.kase.core)
                 api(libs.kotlinx.exports)
+                api(kotlinx.serialization.core)
             }
         }
 
         val commonTest by getting {
             dependencies {
-                implementation(libs.koncurrent.later.test)
+//                implementation(libs.koncurrent.later.test)
                 implementation(kotlinx.serialization.json)
-                implementation(libs.kommander.coroutines)
+//                implementation(libs.kommander.coroutines)
             }
         }
 

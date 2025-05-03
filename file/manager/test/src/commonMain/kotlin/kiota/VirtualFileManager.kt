@@ -7,7 +7,7 @@ import kiota.internal.TestFileInfo
 class VirtualFileManager(
     private val files: MutableMap<String, File> = mutableMapOf()
 ) : FileManager,
-    FileSaver by VirtualFileSaver(files),
+    FileCreator by VirtualFileCreator(files),
     FileOpener by VirtualFileOpener(files),
     FileReader by VirtualFileReader() {
     override val pickers: FilePickers<*, *, *, *> by lazy {

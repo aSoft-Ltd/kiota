@@ -112,7 +112,7 @@ internal fun PickedFile(
             Button(onClick = {
                 scope.launch {
                     message = "Saving file, please wait..."
-                    val result = files.save(
+                    val result = files.create(
                         content = files.readBytes(file.file),
                         name = file.name(),
                         type = Mime.from(extension = file.extension())

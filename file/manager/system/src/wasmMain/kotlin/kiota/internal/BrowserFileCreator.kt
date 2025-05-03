@@ -7,12 +7,12 @@ import org.w3c.dom.HTMLAnchorElement
 import org.w3c.dom.url.URL
 import org.w3c.files.File
 import org.w3c.files.FilePropertyBag
-import kiota.FileSaver
+import kiota.FileCreator
 import kiota.SingleFileResponse
 import kiota.file.mime.Mime
 
-internal class BrowserFileSaver : FileSaver {
-    override suspend fun save(content: ByteArray, name: String, type: Mime) = save(
+internal class BrowserFileCreator : FileCreator {
+    override suspend fun create(content: ByteArray, name: String, type: Mime) = save(
         content = content.toJsInt8Array(),
         name = name,
         type = type
@@ -26,7 +26,7 @@ internal class BrowserFileSaver : FileSaver {
         return array
     }
 
-    override suspend fun save(content: String, name: String, type: Mime) = save(
+    override suspend fun create(content: String, name: String, type: Mime) = save(
         content = content.toJsString(),
         name = name,
         type = type
