@@ -18,4 +18,7 @@ listOf("kommander", "kollections", "kase", "lexi").forEach { includeBuild("../$i
 rootProject.name = "kiota"
 
 // submodules
-includeSubs("kiota", ".", "url", "sse", "numeral")
+includeSubs("kiota", ".", "url", "sse", "files")
+includeSubs("kiota-file", "file", "core", "pickers", "compose")
+includeSubs("kiota-file-manager", "file/manager", "core", "system", "test")
+includeSubs("kiota-samples", "samples", "shared","desktop", "browser", "android")
