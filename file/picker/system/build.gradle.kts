@@ -35,6 +35,7 @@ kotlin {
             dependencies {
                 api(projects.kiotaFilePickerCore)
                 api(projects.kiotaFileSystem)
+                api(kotlinx.coroutines.core)
             }
         }
 
@@ -46,7 +47,7 @@ kotlin {
 
         val jvmMain by getting {
             dependencies {
-                implementation(libs.koncurrent.later.coroutines)
+
             }
         }
 
@@ -76,17 +77,6 @@ kotlin {
                 dependsOn(osxMain)
             }
         }
-
-//        val linuxMain by creating {
-//            dependsOn(commonMain)
-//        }
-//
-//        linuxTargets.forEach {
-//            val main by it.compilations.getting {}
-//            main.defaultSourceSet {
-//                dependsOn(linuxMain)
-//            }
-//        }
     }
 }
 

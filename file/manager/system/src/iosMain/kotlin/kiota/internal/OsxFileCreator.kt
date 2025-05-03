@@ -85,7 +85,7 @@ class OsxFileCreator : FileCreator {
         }
     }
 
-    override suspend fun create(content: String, name: String, type: Mime) = save(
+    override suspend fun create(content: String, name: String, type: Mime) = create(
         content = content.encodeToByteArray(),
         name = name,
         type = type

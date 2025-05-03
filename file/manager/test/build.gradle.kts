@@ -22,61 +22,17 @@ kotlin {
     if (Targeting.JVM) jvm { library() }
     if (Targeting.JS) js(IR) { library() }
     if (Targeting.WASM) wasmJs { library() }
-//    if (Targeting.WASM) wasmWasi { library() }
-    val iosTargets = if (Targeting.OSX) iosTargets() else listOf()
-//    val ndkTargets = if (Targeting.NDK) ndkTargets() else listOf()
-    val linuxTargets = if (Targeting.LINUX) linuxTargets() else listOf()
-//    val mingwTargets = if (Targeting.MINGW) mingwTargets() else listOf()
-    val nativeTargets = iosTargets + linuxTargets
+    if (Targeting.WASM) wasmWasi { library() }
+    if (Targeting.OSX) osxTargets() else listOf()
+    if (Targeting.NDK) ndkTargets() else listOf()
+    if (Targeting.LINUX) linuxTargets() else listOf()
+    if (Targeting.MINGW) mingwTargets() else listOf()
 
     sourceSets {
         val commonMain by getting {
             dependencies {
                 api(projects.kiotaFileManagerCore)
                 api(projects.kiotaFilePickerTest)
-            }
-        }
-
-        val commonTest by getting {
-            dependencies {
-                implementation(libs.koncurrent.later.test)
-                implementation(kotlinx.serialization.json)
-                implementation(libs.kommander.coroutines)
-            }
-        }
-
-        val wasmMain by creating {
-            dependsOn(commonMain)
-            dependencies {
-                implementation(kotlinx.browser)
-            }
-        }
-
-        if(Targeting.WASM) {
-            val wasmJsMain by getting {
-                dependsOn(wasmMain)
-            }
-        }
-
-        val iosMain by creating {
-            dependsOn(commonMain)
-        }
-
-        val linuxMain by creating {
-            dependsOn(commonMain)
-        }
-
-        iosTargets.forEach {
-            val main by it.compilations.getting {}
-            main.defaultSourceSet {
-                dependsOn(iosMain)
-            }
-        }
-
-        linuxTargets.forEach {
-            val main by it.compilations.getting {}
-            main.defaultSourceSet {
-                dependsOn(linuxMain)
             }
         }
     }

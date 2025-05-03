@@ -1,6 +1,6 @@
 package kiota.internal
 
-import org.w3c.files.File
 import kiota.File
+import org.w3c.files.File as BrowserFile
 
-data class FileImpl(val wrapped: File): kiota.File
+data class FileImpl(val wrapped: BrowserFile) : File
