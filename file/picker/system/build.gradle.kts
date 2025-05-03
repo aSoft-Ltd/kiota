@@ -45,17 +45,8 @@ kotlin {
             }
         }
 
-        val jvmMain by getting {
-            dependencies {
-
-            }
-        }
-
         val wasmMain by creating {
             dependsOn(commonMain)
-            dependencies {
-                implementation(kotlinx.browser)
-            }
         }
 
         if (Targeting.WASM) {
@@ -66,9 +57,6 @@ kotlin {
 
         val osxMain by creating {
             dependsOn(commonMain)
-            dependencies {
-
-            }
         }
 
         osxTargets.forEach {

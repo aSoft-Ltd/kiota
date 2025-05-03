@@ -10,18 +10,18 @@ import kiota.FileOpener
 import kiota.File
 import kiota.SingleFileResponse
 import kiota.file.response.ResponseError
-import java.io.File
+import java.io.File as JFile
 
 
 class AndroidFileOpener(private val context: Context) : FileOpener {
 
-    override suspend fun open(file: kiota.File): SingleFileResponse {
+    override suspend fun open(file: File): SingleFileResponse {
         val info = FileInfo(context, file)
         val myMime = MimeTypeMap.getSingleton()
         val newIntent = Intent(Intent.ACTION_VIEW)
         val mimeType = myMime.getMimeTypeFromExtension(info.extension())
         val uri = when (file) {
-            is FilePath -> Uri.fromFile(File(file.path))
+            is FilePath -> Uri.fromFile(JFile(file.path))
             is FileUri -> file.uri
             else -> return Failure(errors = listOf(ResponseError.UnknownFileType(file)))
         }

@@ -7,19 +7,19 @@ import kotlinx.coroutines.withContext
 import kiota.FileReader
 import kiota.File
 import java.io.ByteArrayOutputStream
-import java.io.File
+import java.io.File as JFile
 import java.nio.charset.Charset
 
 internal class AndroidFileReader(private val context: Context) : FileReader {
 
-    override suspend fun readText(file: kiota.File): String = when (file) {
+    override suspend fun readText(file: File): String = when (file) {
         is FilePath -> readText(file)
         is FileUri -> readText(file)
         else -> throw IllegalArgumentException("File of type `${file::class.simpleName}` is not supported on Android")
     }
 
     private suspend fun readText(file: FilePath) = withContext(Dispatchers.IO) {
-        File(file.path).readText()
+        JFile(file.path).readText()
     }
 
     private suspend fun readText(file: FileUri) = withContext(Dispatchers.IO) {
@@ -31,14 +31,14 @@ internal class AndroidFileReader(private val context: Context) : FileReader {
         }
     }
 
-    override suspend fun readBytes(file: kiota.File): ByteArray = when (file) {
+    override suspend fun readBytes(file: File): ByteArray = when (file) {
         is FilePath -> readBytes(file)
         is FileUri -> readBytes(file)
         else -> throw IllegalArgumentException("File of type `${file::class.simpleName}` is not supported on Android")
     }
 
     private suspend fun readBytes(file: FilePath) = withContext(Dispatchers.IO) {
-        File(file.path).readBytes()
+        JFile(file.path).readBytes()
     }
 
     private suspend fun readBytes(file: FileUri) = withContext(Dispatchers.IO) {

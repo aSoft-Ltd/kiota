@@ -37,19 +37,8 @@ kotlin {
             }
         }
 
-        val commonTest by getting {
-            dependencies {
-                implementation(libs.koncurrent.later.test)
-                implementation(kotlinx.serialization.json)
-                implementation(libs.kommander.coroutines)
-            }
-        }
-
         val wasmMain by creating {
             dependsOn(commonMain)
-            dependencies {
-                implementation(kotlinx.browser)
-            }
         }
 
         if(Targeting.WASM) {

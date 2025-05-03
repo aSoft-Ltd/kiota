@@ -81,7 +81,7 @@ kotlin {
             dependencies {
                 api(compose.runtime)
                 api(compose.foundation)
-                api(projects.kiotaFileManagerCore)
+                api(projects.kiotaFileManagerSystem)
             }
         }
 
