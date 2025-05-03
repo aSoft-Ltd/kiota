@@ -1,10 +1,10 @@
 import kommander.expect
-import system.GB
-import system.MB
-import system.bits
-import system.bytes
-import system.Gb
-import system.Mb
+import kiota.GB
+import kiota.MB
+import kiota.bits
+import kiota.bytes
+import kiota.Gb
+import kiota.Mb
 import kotlin.test.Test
 
 class MemoryUnitComparison {

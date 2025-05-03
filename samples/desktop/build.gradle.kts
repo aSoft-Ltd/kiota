@@ -33,7 +33,7 @@ kotlin {
 
 compose.desktop {
     application {
-        mainClass = "kiota.samples.MainKt"
+        mainClass = "kiota.sample.MainKt"
 
         buildTypes.release.proguard {
             version = "7.4.0"

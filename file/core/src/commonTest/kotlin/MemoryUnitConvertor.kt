@@ -1,4 +1,4 @@
-import system.memorySize
+import kiota.memorySize
 import kommander.expect
 import kotlin.test.Test
 

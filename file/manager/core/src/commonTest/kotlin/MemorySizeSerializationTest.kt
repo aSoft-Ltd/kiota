@@ -1,7 +1,7 @@
-import system.MemorySize
-import system.MemoryUnit
-import system.Multiplier
-import system.memorySizeOrNull
+import kiota.MemorySize
+import kiota.MemoryUnit
+import kiota.Multiplier
+import kiota.memorySizeOrNull
 import kommander.expect
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

@@ -1,6 +1,6 @@
 import kommander.expect
-import system.file.mime.Image
-import system.file.mime.Mime
+import kiota.file.mime.Image
+import kiota.file.mime.Mime
 import kotlin.test.Test
 
 class MimeFromExtensions {
