@@ -1,8 +1,6 @@
-package kiota.file
+package kiota
 
-import kiota.Denied
-import kiota.MemorySize
-import kiota.SingleFileResponse
+import kiota.file.SingleFilePicker
 import kiota.file.mime.Mime
 
 class FixedResultSingleFilePicker(private val result: Denied) : SingleFilePicker {

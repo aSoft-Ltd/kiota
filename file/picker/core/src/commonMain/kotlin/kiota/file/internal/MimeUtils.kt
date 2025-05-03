@@ -5,7 +5,7 @@ import kiota.file.mime.Image
 import kiota.file.mime.Mime
 import kiota.file.mime.Video
 
-internal fun List<Mime>.toMediaMimes() = if (contains(All)) {
+fun List<Mime>.toMediaMimes() = if (contains(All)) {
     listOf(Image, Video)
 } else {
     filter { it is Image || it is Video }

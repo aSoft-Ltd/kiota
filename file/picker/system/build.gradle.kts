@@ -7,10 +7,10 @@ plugins {
     id("tz.co.asoft.library")
 }
 
-description = "A kotlin multiplatform abstraction for reading files as blobs"
+description = "A kotlin multiplatform abstraction for choosing files on all platforms"
 
 configureAndroid("src/androidMain") {
-    namespace = "tz.co.asoft.system.file.manager"
+    namespace = "tz.co.asoft.system.file.chooser"
     compileSdkVersion(apiLevel = androidx.versions.compile.sdk.get().toInt())
     defaultConfig {
         minSdk = 8
@@ -23,25 +23,29 @@ kotlin {
     if (Targeting.JS) js(IR) { library() }
     if (Targeting.WASM) wasmJs { library() }
 //    if (Targeting.WASM) wasmWasi { library() }
-    val iosTargets = if (Targeting.OSX) iosTargets() else listOf()
+//    val osxTargets = if (Targeting.OSX) (iosTargets() + tvOsTargets()) else listOf()
+    val osxTargets = if (Targeting.OSX) (iosTargets()) else listOf()
 //    val ndkTargets = if (Targeting.NDK) ndkTargets() else listOf()
     val linuxTargets = if (Targeting.LINUX) linuxTargets() else listOf()
 //    val mingwTargets = if (Targeting.MINGW) mingwTargets() else listOf()
-    val nativeTargets = iosTargets + linuxTargets
+    val nativeTargets = osxTargets + linuxTargets
 
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(projects.kiotaFileManagerCore)
-                api(projects.kiotaFilePickerSystem)
+                api(projects.kiotaFilePickerCore)
             }
         }
 
-        val commonTest by getting {
+        val androidMain by getting {
             dependencies {
-                implementation(libs.koncurrent.later.test)
-                implementation(kotlinx.serialization.json)
-                implementation(libs.kommander.coroutines)
+                api(androidx.activity.ktx)?.because("We need it to check permissions while picking files")
+            }
+        }
+
+        val jvmMain by getting {
+            dependencies {
+                implementation(libs.koncurrent.later.coroutines)
             }
         }
 
@@ -52,33 +56,36 @@ kotlin {
             }
         }
 
-        if(Targeting.WASM) {
+        if (Targeting.WASM) {
             val wasmJsMain by getting {
                 dependsOn(wasmMain)
             }
         }
 
-        val iosMain by creating {
+        val osxMain by creating {
             dependsOn(commonMain)
-        }
+            dependencies {
 
-        val linuxMain by creating {
-            dependsOn(commonMain)
-        }
-
-        iosTargets.forEach {
-            val main by it.compilations.getting {}
-            main.defaultSourceSet {
-                dependsOn(iosMain)
             }
         }
 
-        linuxTargets.forEach {
+        osxTargets.forEach {
             val main by it.compilations.getting {}
             main.defaultSourceSet {
-                dependsOn(linuxMain)
+                dependsOn(osxMain)
             }
         }
+
+//        val linuxMain by creating {
+//            dependsOn(commonMain)
+//        }
+//
+//        linuxTargets.forEach {
+//            val main by it.compilations.getting {}
+//            main.defaultSourceSet {
+//                dependsOn(linuxMain)
+//            }
+//        }
     }
 }
 

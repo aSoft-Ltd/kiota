@@ -18,7 +18,7 @@ private suspend fun FileInfo.fits(mimes: List<Mime>, limit: MemorySize): List<Re
     if (size > limit) add(ResponseError.SizeLimitExceeded(name, size, limit))
 }
 
-internal suspend fun List<File>.toResponse(
+suspend fun List<File>.toResponse(
     mimes: List<Mime>,
     limit: PickerLimit,
     infos: List<FileInfo>

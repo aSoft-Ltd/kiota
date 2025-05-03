@@ -1,8 +1,6 @@
-package kiota.file
+package kiota
 
-import kiota.Denied
-import kiota.MemorySize
-import kiota.SingleFileResponse
+import kiota.file.SingleMediaPicker
 import kiota.file.mime.MediaMime
 
 class FixedResultSingleMediaPicker(private val result: Denied) : SingleMediaPicker {

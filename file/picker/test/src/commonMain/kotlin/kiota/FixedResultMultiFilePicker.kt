@@ -1,7 +1,7 @@
-package kiota.file
+package kiota
 
-import kiota.Denied
-import kiota.MultiPickerResponse
+import kiota.file.MultiFilePicker
+import kiota.file.PickerLimit
 import kiota.file.mime.Mime
 
 class FixedResultMultiFilePicker(private val result: Denied) : MultiFilePicker {

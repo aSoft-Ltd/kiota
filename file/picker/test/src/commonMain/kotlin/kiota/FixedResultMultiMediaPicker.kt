@@ -1,7 +1,7 @@
-package kiota.file
+package kiota
 
-import kiota.Denied
-import kiota.MultiPickerResponse
+import kiota.file.MultiMediaPicker
+import kiota.file.PickerLimit
 import kiota.file.mime.MediaMime
 
 class FixedResultMultiMediaPicker(private val result: Denied) : MultiMediaPicker {

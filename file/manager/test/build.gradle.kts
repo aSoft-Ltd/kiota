@@ -33,6 +33,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(projects.kiotaFileManagerCore)
+                api(projects.kiotaFilePickerTest)
             }
         }
 
