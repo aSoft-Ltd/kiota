@@ -33,53 +33,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(projects.kiotaFileCore)
-                api(libs.koncurrent.later.core)
-                api(kotlinx.coroutines.core)
-                api(libs.kase.core)
-                api(libs.kotlinx.exports)
-            }
-        }
-
-        val commonTest by getting {
-            dependencies {
-                implementation(libs.koncurrent.later.test)
-                implementation(kotlinx.serialization.json)
-                implementation(libs.kommander.coroutines)
-            }
-        }
-
-        val wasmMain by creating {
-            dependsOn(commonMain)
-            dependencies {
-                implementation(kotlinx.browser)
-            }
-        }
-
-        if (Targeting.WASM) {
-            val wasmJsMain by getting {
-                dependsOn(wasmMain)
-            }
-        }
-
-        val darwinMain by creating {
-            dependsOn(commonMain)
-        }
-
-        val linuxMain by creating {
-            dependsOn(commonMain)
-        }
-
-        osxTargets.forEach {
-            val main by it.compilations.getting {}
-            main.defaultSourceSet {
-                dependsOn(darwinMain)
-            }
-        }
-
-        linuxTargets.forEach {
-            val main by it.compilations.getting {}
-            main.defaultSourceSet {
-                dependsOn(linuxMain)
             }
         }
     }

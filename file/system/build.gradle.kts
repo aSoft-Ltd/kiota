@@ -33,18 +33,10 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(projects.kiotaFileCore)
-                api(libs.koncurrent.later.core)
+//                api(libs.koncurrent.later.core)
                 api(kotlinx.coroutines.core)
-                api(libs.kase.core)
-                api(libs.kotlinx.exports)
-            }
-        }
-
-        val commonTest by getting {
-            dependencies {
-                implementation(libs.koncurrent.later.test)
-                implementation(kotlinx.serialization.json)
-                implementation(libs.kommander.coroutines)
+//                api(libs.kase.core)
+//                api(libs.kotlinx.exports)
             }
         }
 
