@@ -6,7 +6,7 @@ plugins {
     id("tz.co.asoft.library")
 }
 
-description = "A kotlin multiplatform abstraction for choosing files on all platforms"
+description = "A kotlin multiplatform abstraction for choosing files"
 
 kotlin {
     if (Targeting.JVM) jvm { library() }

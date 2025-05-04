@@ -7,7 +7,7 @@ plugins {
     id("tz.co.asoft.library")
 }
 
-description = "A kotlin multiplatform abstraction for reading files as blobs"
+description = "A kotlin multiplatform abstraction for managing files provided by systems on different platforms"
 
 configureAndroid("src/androidMain") {
     namespace = "tz.co.asoft.system.file.manager"

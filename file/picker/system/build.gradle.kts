@@ -7,7 +7,7 @@ plugins {
     id("tz.co.asoft.library")
 }
 
-description = "A kotlin multiplatform abstraction for choosing files on all platforms"
+description = "A kotlin multiplatform abstraction for choosing files on different file systems provided by their respective platforms"
 
 configureAndroid("src/androidMain") {
     namespace = "tz.co.asoft.system.file.chooser"

@@ -6,6 +6,8 @@ plugins {
     id("tz.co.asoft.library")
 }
 
+description = "A kotlin multiplatform implementation of files inmemory"
+
 kotlin {
     if (Targeting.JVM) jvm { library() }
     if (Targeting.JS) js(IR) { library() }

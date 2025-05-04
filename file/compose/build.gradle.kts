@@ -16,7 +16,7 @@ plugins {
     alias(kotlinz.plugins.dokka)
 }
 
-description = "The compose sdk to assist in building of the apps"
+description = "A compose way of reading local files and displaying them in compose ui"
 
 android {
     namespace = "tz.co.asoft.system.file.compose"
