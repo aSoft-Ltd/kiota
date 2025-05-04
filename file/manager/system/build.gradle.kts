@@ -22,12 +22,7 @@ kotlin {
     if (Targeting.JVM) jvm { library() }
     if (Targeting.JS) js(IR) { library() }
     if (Targeting.WASM) wasmJs { library() }
-//    if (Targeting.WASM) wasmWasi { library() }
     val iosTargets = if (Targeting.OSX) iosTargets() else listOf()
-//    val ndkTargets = if (Targeting.NDK) ndkTargets() else listOf()
-    val linuxTargets = if (Targeting.LINUX) linuxTargets() else listOf()
-//    val mingwTargets = if (Targeting.MINGW) mingwTargets() else listOf()
-    val nativeTargets = iosTargets + linuxTargets
 
     sourceSets {
         val commonMain by getting {
@@ -59,13 +54,6 @@ kotlin {
             val main by it.compilations.getting {}
             main.defaultSourceSet {
                 dependsOn(iosMain)
-            }
-        }
-
-        linuxTargets.forEach {
-            val main by it.compilations.getting {}
-            main.defaultSourceSet {
-                dependsOn(linuxMain)
             }
         }
     }
