@@ -23,7 +23,6 @@ kotlin {
     if (Targeting.JS) js(IR) { library() }
     if (Targeting.WASM) wasmJs { library() }
     val osxTargets = if (Targeting.OSX) (iosTargets()) else listOf()
-    if (Targeting.LINUX) linuxTargets() else listOf()
 
     sourceSets {
         val commonMain by getting {
