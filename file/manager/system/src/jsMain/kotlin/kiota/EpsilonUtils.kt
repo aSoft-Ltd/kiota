@@ -51,6 +51,7 @@ suspend fun FileReader.readBytesOf(
     onprogress = {
         val done = it.loaded.toDouble().toLong()
         val total = it.total.toDouble().toLong()
+        true
         // TODO("Update progress: $done / $total")
     }
     onabort = {
@@ -76,7 +77,7 @@ suspend fun FileReader.readTextOf(
     onprogress = {
         val done = it.loaded.toDouble().toLong()
         val total = it.total.toDouble().toLong()
-        ""
+        true
         // TODO("Update progress: $done / $total")
     }
     onabort = {

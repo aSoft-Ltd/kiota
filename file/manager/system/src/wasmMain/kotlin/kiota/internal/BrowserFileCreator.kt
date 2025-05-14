@@ -34,14 +34,6 @@ internal class BrowserFileCreator : FileCreator {
 
     private fun save(content: JsAny?, name: String, type: Mime): SingleFileResponse {
         val file = File(arrayOf(content).toJsArray(), fileName = name, options = FilePropertyBag(type = type.text))
-        val url = URL.createObjectURL(file)
-        val a = document.createElement("a") as HTMLAnchorElement
-        a.setAttribute("href", url)
-        a.setAttribute("download", name)
-        a.setAttribute("target", "_blank")
-        a.click()
-        a.remove()
-        URL.revokeObjectURL(url)
         return FileImpl(file)
     }
 }

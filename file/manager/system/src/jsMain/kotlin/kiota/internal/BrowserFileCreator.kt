@@ -1,15 +1,12 @@
 package kiota.internal
 
-import kotlinx.browser.document
-import org.khronos.webgl.Int8Array
-import org.khronos.webgl.set
-import org.w3c.dom.HTMLAnchorElement
-import org.w3c.dom.url.URL
-import org.w3c.files.File
-import org.w3c.files.FilePropertyBag
 import kiota.FileCreator
 import kiota.SingleFileResponse
 import kiota.file.mime.Mime
+import org.khronos.webgl.Int8Array
+import org.khronos.webgl.set
+import org.w3c.files.File
+import org.w3c.files.FilePropertyBag
 
 internal class BrowserFileCreator : FileCreator {
     override suspend fun create(content: ByteArray, name: String, type: Mime) = save(
@@ -34,14 +31,6 @@ internal class BrowserFileCreator : FileCreator {
 
     private fun save(content: Any?, name: String, type: Mime): SingleFileResponse {
         val file = File(arrayOf(content), fileName = name, options = FilePropertyBag(type = type.text))
-        val url = URL.createObjectURL(file)
-        val a = document.createElement("a") as HTMLAnchorElement
-        a.setAttribute("href", url)
-        a.setAttribute("download", name)
-        a.setAttribute("target", "_blank")
-        a.click()
-        a.remove()
-        URL.revokeObjectURL(url)
         return FileImpl(file)
     }
 }

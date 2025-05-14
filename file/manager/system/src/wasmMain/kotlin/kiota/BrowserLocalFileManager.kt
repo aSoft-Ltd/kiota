@@ -1,10 +1,12 @@
 package kiota
 
 import kiota.file.FilePickers
+import kiota.internal.BrowserFileCreator
+import kiota.internal.BrowserFileDeleter
 import kiota.internal.BrowserFileInfo
 import kiota.internal.BrowserFileOpener
 import kiota.internal.BrowserFileReader
-import kiota.internal.BrowserFileCreator
+import kiota.internal.BrowserFileSaver
 import kiota.internal.FileImpl
 import kiota.FileReader as MppFileReader
 
@@ -12,7 +14,9 @@ class BrowserFileManager :
     FileManager,
     MppFileReader by BrowserFileReader(),
     FileCreator by BrowserFileCreator(),
-    FileOpener by BrowserFileOpener() {
+    FileDeleter by BrowserFileDeleter(),
+    FileOpener by BrowserFileOpener(),
+    FileSaver by BrowserFileSaver() {
 
     override val pickers by lazy {
         FilePickers(
