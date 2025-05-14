@@ -85,6 +85,15 @@ internal fun FileSaver(files: FileManager) {
             }) {
                 Text("Open File")
             }
+
+            Button(onClick = {
+                scope.launch {
+                    saved = null
+                    files.saveAs(s)
+                }
+            }) {
+                Text("Save File")
+            }
         }
     }
 }

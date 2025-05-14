@@ -15,11 +15,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kiota.file.PickerLimit
 import kiota.file.mime.Mime
 import kiota.file.response.ResponseError
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.round
 
 @Composable
@@ -105,10 +105,10 @@ internal fun PickedFile(
         size = s.copy(value = round(s.value * 10) / 10)
     }
     Column {
+        Text(
+            "File: ${file.name()}, Size: $size"
+        )
         Row {
-            Text(
-                "File: ${file.name()}, Size: $size"
-            )
             Button(onClick = {
                 scope.launch {
                     message = "Saving file, please wait..."
@@ -125,11 +125,15 @@ internal fun PickedFile(
                     delay(3000)
                     message = null
                 }
-            }) { Text("Save") }
+            }) { Text("Save Privately") }
 
             Button(onClick = {
                 scope.launch { files.open(file.file) }
             }) { Text("Open") }
+
+            Button(onClick = {
+                scope.launch { files.saveAs(file.file) }
+            }) { Text("Save As") }
         }
         Text(message ?: "")
     }

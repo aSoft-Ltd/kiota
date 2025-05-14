@@ -1,5 +1,7 @@
 package kiota
 
+import kiota.file.mime.Mime
+
 interface FileInfo {
     val file: File
 
@@ -23,4 +25,9 @@ interface FileInfo {
      * or reading entire files
      */
     suspend fun size(): MemorySize
+
+    /**
+     * @return the [Mime] type of the file
+     */
+    fun mime(): Mime = Mime.from(extension())
 }

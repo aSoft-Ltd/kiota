@@ -6,9 +6,9 @@ import kiota.file.mime.Text
 
 interface FileCreator {
     /**
-     * Saves the file with [content] to the file system
+     * Creates a file with [content] inside the private/app directory
      *
-     * @return [SingleFileResponse] when the file was successfully saved
+     * @return [SingleFileResponse] when the file was successfully created
      */
     suspend fun create(
         content: ByteArray,
@@ -16,6 +16,12 @@ interface FileCreator {
         type: Mime = Application.OctetStream
     ): SingleFileResponse
 
+
+    /**
+     * Creates a file with [content] inside the private/app directory
+     *
+     * @return [SingleFileResponse] when the file was successfully created
+     */
     suspend fun create(
         content: String,
         name: String = "file.txt",

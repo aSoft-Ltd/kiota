@@ -1,21 +1,24 @@
 package kiota
 
-import platform.Foundation.NSFileManager
-import platform.UIKit.UIViewController
 import kiota.file.FilePickers
-import kiota.file.mime.Mime
 import kiota.internal.FileInfoPath
 import kiota.internal.FileInfoProvider
 import kiota.internal.FileProvider
 import kiota.internal.FileUrl
+import kiota.internal.OsxFileCreator
+import kiota.internal.OsxFileDeleter
 import kiota.internal.OsxFileOpener
 import kiota.internal.OsxFileReader
-import kiota.internal.OsxFileCreator
+import kiota.internal.OsxFileSaver
+import platform.Foundation.NSFileManager
+import platform.UIKit.UIViewController
 
 class IosFileManager :
     FileManager,
     FileOpener,
-    FileReader by OsxFileReader() {
+    FileReader by OsxFileReader(),
+    FileCreator by OsxFileCreator(),
+    FileDeleter by OsxFileDeleter() {
     override val pickers by lazy {
         FilePickers(
             documents = OSXMultiFilePicker(),
@@ -25,7 +28,7 @@ class IosFileManager :
         )
     }
 
-    private val saver by lazy { OsxFileCreator() }
+    private val saver by lazy { OsxFileSaver() }
     private val opener by lazy { OsxFileOpener() }
 
     fun initialize(host: UIViewController) {
@@ -49,8 +52,7 @@ class IosFileManager :
         else -> throw IllegalArgumentException("Unsupported file type on IOS")
     }
 
-    override suspend fun create(content: ByteArray, name: String, type: Mime) = saver.create(content, name, type)
-    override suspend fun create(content: String, name: String, type: Mime) = saver.create(content, name, type)
+    override suspend fun saveAs(file: File): SingleFileResponse = saver.saveAs(file)
 
     override suspend fun open(file: File) = opener.open(file)
     override suspend fun open(url: String) = opener.open(url)

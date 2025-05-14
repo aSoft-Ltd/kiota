@@ -1,17 +1,21 @@
 package kiota
 
 import kiota.file.FilePickers
+import kiota.internal.FileImpl
 import kiota.internal.FileInfoImpl
+import kiota.internal.JvmFileCreator
+import kiota.internal.JvmFileDeleter
 import kiota.internal.JvmFileOpener
 import kiota.internal.JvmFileReader
-import kiota.internal.JvmFileCreator
-import kiota.internal.FileImpl
+import kiota.internal.JvmFileSaver
 import kiota.internal.toFileOrNull
 
-class JvmFileManager :
+class JvmFileManager(private val sandbox: java.io.File = java.io.File("./tmp")) :
     FileManager,
     FileReader by JvmFileReader(),
-    FileCreator by JvmFileCreator(),
+    FileCreator by JvmFileCreator(sandbox),
+    FileDeleter by JvmFileDeleter(),
+    FileSaver by JvmFileSaver(),
     FileOpener by JvmFileOpener() {
     override val pickers by lazy {
         FilePickers(

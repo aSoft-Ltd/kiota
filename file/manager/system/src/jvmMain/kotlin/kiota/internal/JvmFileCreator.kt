@@ -1,40 +1,17 @@
 package kiota.internal
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
-import kiota.Cancelled
 import kiota.FileCreator
 import kiota.SingleFileResponse
 import kiota.file.mime.Mime
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
-import javax.swing.JFileChooser
-import javax.swing.SwingUtilities
-import kotlin.coroutines.resume
 
-internal class JvmFileCreator : FileCreator {
-
-    private suspend fun directory(): File? {
-        val chooser = JFileChooser().apply {
-            fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
-            isMultiSelectionEnabled = false
-            this.name = "Select Directory"
-        }
-
-        return suspendCancellableCoroutine { cont ->
-            SwingUtilities.invokeLater {
-                val result = chooser.showOpenDialog(null)
-                val response = when (result) {
-                    JFileChooser.APPROVE_OPTION -> chooser.selectedFile
-                    else -> null
-                }
-                cont.resume(response)
-            }
-        }
-    }
+internal class JvmFileCreator(private val sandbox: File) : FileCreator {
 
     private suspend fun file(name: String, block: File.() -> Unit): SingleFileResponse {
-        val directory = directory() ?: return Cancelled
+        if (!sandbox.exists()) sandbox.mkdirs()
+        val directory = sandbox
         return withContext(Dispatchers.IO) {
             val file = File(directory, name).apply { createNewFile() }
             block(file)
