@@ -26,7 +26,7 @@ class AndroidFileOpener(private val context: Context) : FileOpener {
             else -> return Failure(errors = listOf(ResponseError.UnknownFileType(file)))
         }
         newIntent.setDataAndType(uri, mimeType)
-        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        newIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         return try {
             context.startActivity(newIntent)
             file

@@ -18,26 +18,55 @@ internal fun FileSaver(files: FileManager) {
     val scope = rememberCoroutineScope()
     var message by remember { mutableStateOf<String?>(null) }
     var saved by remember { mutableStateOf<File?>(null) }
-    Button(
-        onClick = {
-            scope.launch {
-                message = "Saving file, please wait..."
-                val result = files.create(content = "Saved from samples", name = "sample.txt")
-                message = when (result) {
-                    is File -> {
-                        saved = result
-                        "File saved successfully"
-                    }
+    Row {
+        Button(
+            onClick = {
+                scope.launch {
+                    message = "Saving file, please wait..."
+                    val result = files.create(content = "Saved from samples", name = "sample.txt")
+                    message = when (result) {
+                        is File -> {
+                            saved = result
+                            "File saved successfully"
+                        }
 
-                    is Failure -> "Failed to save file: ${result.errors.joinToString(", ") { it.message ?: "" }}"
-                    else -> "File save cancelled"
+                        is Failure -> "Failed to save file: ${result.errors.joinToString(", ") { it.message ?: "" }}"
+                        else -> "File save cancelled"
+                    }
+                    delay(3000)
+                    message = null
                 }
-                delay(3000)
-                message = null
             }
+        ) {
+            Text("Save Text File")
         }
-    ) {
-        Text("Save Text File")
+
+        Button(
+            onClick = {
+                scope.launch {
+                    message = "Saving file, please wait..."
+                    val content = buildString {
+                        appendLine("name,age")
+                        appendLine("Andy,12")
+                        appendLine("Jess,14")
+                    }
+                    val result = files.create(content = content, name = "sample.csv")
+                    message = when (result) {
+                        is File -> {
+                            saved = result
+                            "File saved successfully"
+                        }
+
+                        is Failure -> "Failed to save file: ${result.errors.joinToString(", ") { it.message ?: "" }}"
+                        else -> "File save cancelled"
+                    }
+                    delay(3000)
+                    message = null
+                }
+            }
+        ) {
+            Text("Save CSV File")
+        }
     }
 
     Text(message ?: "")

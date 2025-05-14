@@ -25,14 +25,14 @@ class AndroidFileManager(val activity: ComponentActivity) :
         )
     }
 
-    private val saver by lazy { AndroidFileCreator(activity) }
+    private val creator by lazy { AndroidFileCreator(activity) }
 
     fun register() {
         pickers.documents.register()
         pickers.document.register()
         pickers.medias.register()
         pickers.media.register()
-        saver.register()
+        creator.register()
     }
 
     override fun exists(file: kiota.File): Boolean = when (file) {
@@ -54,14 +54,14 @@ class AndroidFileManager(val activity: ComponentActivity) :
 
     override fun info(file: kiota.File): FileInfo = FileInfo(activity, file)
 
-    override suspend fun create(content: ByteArray, name: String, type: Mime) = saver.create(content, name, type)
-    override suspend fun create(content: String, name: String, type: Mime) = saver.create(content, name, type)
+    override suspend fun create(content: ByteArray, name: String, type: Mime) = creator.create(content, name, type)
+    override suspend fun create(content: String, name: String, type: Mime) = creator.create(content, name, type)
 
     fun unregister() {
         pickers.documents.unregister()
         pickers.document.unregister()
         pickers.medias.unregister()
         pickers.media.unregister()
-        saver.unregister()
+        creator.unregister()
     }
 }

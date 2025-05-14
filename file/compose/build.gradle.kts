@@ -19,11 +19,10 @@ plugins {
 description = "A compose way of reading local files and displaying them in compose ui"
 
 android {
-    namespace = "tz.co.asoft.system.file.compose"
+    namespace = "tz.co.asoft.kioa.file.compose"
     compileSdk = androidx.versions.compile.sdk.get().toInt()
     defaultConfig {
         minSdk = 25 // because of the coil dependency has this as it's min sdk
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -63,15 +62,12 @@ kotlin {
         }
     }
 
+    js {
+        browser()
+    }
+
     wasmJs {
-        browser {
-            testTask {
-                useKarma {
-                    useChromeHeadless()
-                    useConfigDirectory(project.projectDir.resolve("karma.config.d").resolve("wasm"))
-                }
-            }
-        }
+        browser()
     }
 
     val ios = listOf(iosArm64(), iosX64(), iosSimulatorArm64())
@@ -103,6 +99,10 @@ kotlin {
         }
 
         val wasmJsMain by getting {
+            dependsOn(skiaMain)
+        }
+
+        val jsMain by getting {
             dependsOn(skiaMain)
         }
 
