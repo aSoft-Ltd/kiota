@@ -1,17 +1,18 @@
-package kiota
+package kiota.internal
 
 import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import kiota.FileScope
+import kiota.MultiPickingResult
 import kiota.file.PickerLimit
 import kiota.file.mime.Image
 import kiota.file.mime.MediaMime
 import kiota.file.mime.Video
 import kiota.file.toResult
-import kiota.internal.File
-import kiota.internal.FileInfo
+import kiota.toMediaType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -34,7 +35,7 @@ internal class AndroidMultiMediaPicker(private val activity: ComponentActivity) 
     suspend fun open(
         mimes: Collection<MediaMime>,
         limit: PickerLimit,
-    ): MultiPickerResult {
+    ): MultiPickingResult {
         if (mimes.isEmpty()) return open(listOf(Image, Video), limit)
         val l = launcher ?: throw IllegalStateException("AndroidFileChooser has not been registered")
         val request = PickVisualMediaRequest.Builder()

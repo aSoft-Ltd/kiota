@@ -1,8 +1,8 @@
 package kiota.internal
 
+import kiota.FileCreationResult
 import kiota.FileCreator
 import kiota.FileScope
-import kiota.SingleFileResponse
 import kiota.file.mime.Mime
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.set
@@ -10,7 +10,7 @@ import org.w3c.files.File
 import org.w3c.files.FilePropertyBag
 
 internal class BrowserFileCreator : FileCreator {
-    override suspend fun create(content: ByteArray, name: String, type: Mime) = save(
+    override suspend fun create(content: ByteArray, name: String, type: Mime) = create(
         content = content.toJsInt8Array(),
         name = name,
         type = type
@@ -24,13 +24,13 @@ internal class BrowserFileCreator : FileCreator {
         return array
     }
 
-    override suspend fun create(content: String, name: String, type: Mime) = save(
+    override suspend fun create(content: String, name: String, type: Mime) = create(
         content = content.toJsString(),
         name = name,
         type = type
     )
 
-    private fun save(content: JsAny?, name: String, type: Mime): SingleFileResponse {
+    private fun create(content: JsAny?, name: String, type: Mime): FileCreationResult {
         val file = File(arrayOf(content).toJsArray(), fileName = name, options = FilePropertyBag(type = type.text))
         return FileImpl(file, FileScope.private)
     }

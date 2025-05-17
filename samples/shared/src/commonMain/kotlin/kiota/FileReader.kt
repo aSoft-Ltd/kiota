@@ -24,7 +24,7 @@ internal fun FileReader(files: FileManager) {
                         when (val file = files.picker().open()) {
                             is Cancelled -> {}
                             is Denied -> {}
-                            is PickerFailure -> {}
+                            is PickingError -> {}
                             is File -> {
                                 text = files.readText(file)
                             }

@@ -1,11 +1,13 @@
-@file:OptIn(ExperimentalEncodingApi::class, ExperimentalForeignApi::class)
+@file:OptIn(ExperimentalEncodingApi::class, ExperimentalForeignApi::class, BetaInteropApi::class)
 
 package kiota.internal
 
-import kiota.Failure
+import kiota.InvalidFileNameError
+import kiota.FileCreationResult
 import kiota.FileCreator
-import kiota.SingleFileResponse
+import kiota.OutOfMemoryError
 import kiota.file.mime.Mime
+import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -21,18 +23,14 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 
 class OsxFileCreator : FileCreator {
 
-    override suspend fun create(content: ByteArray, name: String, type: Mime): SingleFileResponse {
+    override suspend fun create(content: ByteArray, name: String, type: Mime): FileCreationResult {
         val tmp = NSFileManager.defaultManager.temporaryDirectory
-        val src = tmp.URLByAppendingPathComponent(name) ?: return Failure(errors = emptyList()).also {
-            println("Failed to create file URL")
-        }
+        val src = tmp.URLByAppendingPathComponent(name) ?: return InvalidFileNameError(name)
+        val data = NSData.create(
+            base64EncodedString = Base64.encode(content),
+            options = NSDataBase64DecodingIgnoreUnknownCharacters
+        ) ?: return OutOfMemoryError
         withContext(Dispatchers.IO) {
-            val data = NSData.create(
-                base64EncodedString = Base64.encode(content),
-                options = NSDataBase64DecodingIgnoreUnknownCharacters
-            ) ?: return@withContext Failure(errors = emptyList()).also {
-                println("Failed to create NSData from content")
-            }
             data.writeToURL(url = src, atomically = false)
         }
         return FileUrl(src)

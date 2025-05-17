@@ -1,15 +1,15 @@
-package kiota
+package kiota.internal
 
 import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import kiota.FileScope
+import kiota.MultiPickingResult
 import kiota.file.PickerLimit
 import kiota.file.mime.All
 import kiota.file.mime.Mime
 import kiota.file.toResult
-import kiota.internal.File
-import kiota.internal.FileInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -32,7 +32,7 @@ internal class AndroidMultiFilePicker(private val activity: ComponentActivity) {
     suspend fun open(
         mimes: List<Mime>,
         limit: PickerLimit,
-    ): MultiPickerResult {
+    ): MultiPickingResult {
         if (mimes.isEmpty()) return open(listOf(All), limit)
         val l = launcher ?: throw IllegalStateException("AndroidFileChooser has not been registered")
         l.launch(mimes.map { it.text }.toTypedArray())

@@ -7,12 +7,13 @@ interface FileExposer {
     /**
      * Prompts the user with a dialog to save the [file] at a directory of their own choosing
      *
-     * @return [SingleFileResponse] when the file was successfully saved
+     * @return [FileExportResult]
      */
-    suspend fun export(file: File): SingleFileResponse
+    suspend fun export(file: File): FileExportResult
 
     /**
-     * Allow the user to share this file with other applications
+     * Allows the user to share this file
+     * @return [FileExportResult]
      */
-    suspend fun share(file: File): SingleFileResponse
+    suspend fun share(file: File): FileExportResult
 }

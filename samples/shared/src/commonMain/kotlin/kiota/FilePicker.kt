@@ -29,7 +29,7 @@ internal fun FilesPicker(
     Column {
         val picked = remember { mutableStateListOf<File>() }
         val denied = remember { mutableStateOf(false) }
-        val errors = remember { mutableStateListOf<PickerFailure>() }
+        val errors = remember { mutableStateListOf<PickingError>() }
         Row {
             Button(
                 onClick = {
@@ -37,7 +37,7 @@ internal fun FilesPicker(
                         when (val result = files.picker(limit = PickerLimit(size = 10.MB, count = 2)).open()) {
                             Cancelled -> {}
                             Denied -> denied.value = true
-                            is PickerFailure -> errors += result.all()
+                            is PickingError -> errors += result.all()
                             is Files -> picked += result
                         }
                     }
@@ -52,7 +52,7 @@ internal fun FilesPicker(
                         when (val result = files.picker().open()) {
                             is Cancelled -> {}
                             is Denied -> denied.value = true
-                            is PickerFailure -> errors += result
+                            is PickingError -> errors += result
                             is File -> picked += result
                         }
                     }

@@ -1,10 +1,9 @@
 package kiota.internal
 
-import kiota.Cancelled
-import kiota.Failure
 import kiota.File
+import kiota.FileExportResult
 import kiota.FileExposer
-import kiota.SingleFileResponse
+import kiota.UnknownFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -36,9 +35,9 @@ internal class JvmFileExposer : FileExposer {
         }
     }
 
-    override suspend fun export(file: File): SingleFileResponse {
-        val src = file.toFileOrNull() ?: return Failure(errors = listOf())
-        val directory = directory() ?: return Cancelled
+    override suspend fun export(file: File): FileExportResult {
+        val src = file.toFileOrNull() ?: return FileExportResult.Rejected(UnknownFile(file))
+        val directory = directory() ?: return FileExportResult.Cancelled
         return withContext(Dispatchers.IO) {
             val dst = JFile(directory, src.name).apply { createNewFile() }
             val sis = FileInputStream(src)
@@ -47,9 +46,10 @@ internal class JvmFileExposer : FileExposer {
             sis.close()
             dos.flush()
             dos.close()
-            FileImpl(dst.path)
+            FileExportResult.Success
+//            FileImpl(dst.path)
         }
     }
 
-    override suspend fun share(file: File): SingleFileResponse = export(file)
+    override suspend fun share(file: File): FileExportResult = export(file)
 }

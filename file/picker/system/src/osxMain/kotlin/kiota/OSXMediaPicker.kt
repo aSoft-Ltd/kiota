@@ -61,7 +61,7 @@ internal class OSXMediaPicker(private val host: UIViewController) {
         return PHPickerFilter.anyFilterMatchingSubfilters(filters.toList())
     }
 
-    private suspend fun launch(mimes: Collection<Mime>, limit: PickerLimit): MultiPickerResult {
+    private suspend fun launch(mimes: Collection<Mime>, limit: PickerLimit): MultiPickingResult {
         val config = PHPickerConfiguration()
         config.filter = mimes.toFilter()
         config.selectionLimit = limit.count.toLong()
@@ -81,7 +81,7 @@ internal class OSXMediaPicker(private val host: UIViewController) {
         return files.toResult(mimes, limit, infos)
     }
 
-    suspend fun show(mimes: Collection<MediaMime>, limit: PickerLimit): MultiPickerResult {
+    suspend fun show(mimes: Collection<MediaMime>, limit: PickerLimit): MultiPickingResult {
         if (permission.check(mimes) == Permission.Granted) return launch(mimes, limit)
         return when (permission.request(mimes)) {
             Permission.Granted -> launch(mimes, limit)

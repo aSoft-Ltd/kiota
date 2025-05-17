@@ -34,7 +34,7 @@ internal class OSXFilePicker(private val host: UIViewController) {
         }
     }
 
-    suspend fun show(mimes: List<Mime>, limit: PickerLimit): MultiPickerResult {
+    suspend fun show(mimes: List<Mime>, limit: PickerLimit): MultiPickingResult {
         val types = when {
             mimes.isEmpty() -> listOf(UTTypeItem)
             mimes.contains(All) -> listOf(UTTypeItem)

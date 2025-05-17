@@ -12,19 +12,19 @@ class OSXFilePickerFactory(host: UIViewController) : FilePickerFactory {
     private val documents by lazy { OSXFilePicker(host) }
     private val media by lazy { OSXMediaPicker(host) }
 
-    override fun picker(mimes: Collection<MediaMime>, limit: MemorySize): Openable<SinglePickerResult> = Openable {
+    override fun picker(mimes: Collection<MediaMime>, limit: MemorySize): Openable<SinglePickingResult> = Openable {
         media.show(mimes, PickerLimit(limit, 1)).toSingle()
     }
 
-    override fun picker(mimes: Collection<MediaMime>, limit: PickerLimit): Openable<MultiPickerResult> = Openable {
+    override fun picker(mimes: Collection<MediaMime>, limit: PickerLimit): Openable<MultiPickingResult> = Openable {
         media.show(mimes, limit)
     }
 
-    override fun picker(mimes: Iterable<Mime>, limit: MemorySize): Openable<SinglePickerResult> = Openable {
+    override fun picker(mimes: Iterable<Mime>, limit: MemorySize): Openable<SinglePickingResult> = Openable {
         documents.show(mimes.toList(), PickerLimit(limit, 1)).toSingle()
     }
 
-    override fun picker(mimes: Iterable<Mime>, limit: PickerLimit): Openable<MultiPickerResult> = Openable {
+    override fun picker(mimes: Iterable<Mime>, limit: PickerLimit): Openable<MultiPickingResult> = Openable {
         documents.show(mimes.toList(), limit)
     }
 }

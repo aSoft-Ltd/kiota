@@ -40,7 +40,7 @@ internal class OsxFileExposer(private val host: UIViewController) : FileExposer 
         }
     }
 
-    override suspend fun export(file: File): SingleFileResponse {
+    override suspend fun export(file: File): Boolean {
         if (file !is FileUrl) return Denied
         val picker = UIDocumentPickerViewController(forExportingURLs = listOf(file.url), asCopy = true)
 

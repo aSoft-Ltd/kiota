@@ -10,19 +10,19 @@ import kiota.file.response.toSingle
 class VirtualFilePickerFactory(
     files: MutableMap<String, File>
 ) : VirtualPicker(files), FilePickerFactory {
-    override fun picker(mimes: Collection<MediaMime>, limit: MemorySize): Openable<SinglePickerResult> = Openable {
+    override fun picker(mimes: Collection<MediaMime>, limit: MemorySize): Openable<SinglePickingResult> = Openable {
         show(mimes, PickerLimit(limit, 1)).toSingle()
     }
 
-    override fun picker(mimes: Collection<MediaMime>, limit: PickerLimit): Openable<MultiPickerResult> = Openable {
+    override fun picker(mimes: Collection<MediaMime>, limit: PickerLimit): Openable<MultiPickingResult> = Openable {
         show(mimes, limit)
     }
 
-    override fun picker(mimes: Iterable<Mime>, limit: MemorySize): Openable<SinglePickerResult> = Openable {
+    override fun picker(mimes: Iterable<Mime>, limit: MemorySize): Openable<SinglePickingResult> = Openable {
         show(mimes, PickerLimit(limit, 1)).toSingle()
     }
 
-    override fun picker(mimes: Iterable<Mime>, limit: PickerLimit): Openable<MultiPickerResult> = Openable {
+    override fun picker(mimes: Iterable<Mime>, limit: PickerLimit): Openable<MultiPickingResult> = Openable {
         show(mimes, limit)
     }
 }
