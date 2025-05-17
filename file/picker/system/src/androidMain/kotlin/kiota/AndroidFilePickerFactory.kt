@@ -29,19 +29,19 @@ class AndroidFilePickerFactory(private val activity: ComponentActivity) : FilePi
         pickers.media.register()
     }
 
-    override fun picker(mimes: Collection<MediaMime>, limit: MemorySize): Openable<SinglePickingResult> = Openable {
+    override fun picker(mimes: Collection<MediaMime>, limit: MemorySize) = Openable {
         pickers.media.open(mimes, limit)
     }
 
-    override fun picker(mimes: Collection<MediaMime>, limit: PickerLimit): Openable<MultiPickingResult> = Openable {
+    override fun picker(mimes: Collection<MediaMime>, limit: PickerLimit) = Openable {
         pickers.medias.open(mimes, limit)
     }
 
-    override fun picker(mimes: Iterable<Mime>, limit: MemorySize): Openable<SinglePickingResult> = Openable {
+    override fun picker(mimes: Iterable<Mime>, limit: MemorySize) = Openable {
         pickers.document.open(mimes.toList(), limit)
     }
 
-    override fun picker(mimes: Iterable<Mime>, limit: PickerLimit): Openable<MultiPickingResult> = Openable {
+    override fun picker(mimes: Iterable<Mime>, limit: PickerLimit) = Openable {
         pickers.documents.open(mimes.toList(), limit)
     }
 

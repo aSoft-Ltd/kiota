@@ -2,6 +2,8 @@ package kiota.internal
 
 import android.content.Context
 import android.os.Build
+import kiota.Failure
+import kiota.FileCreationExplanation
 import kiota.FileCreationResult
 import kiota.FileCreator
 import kiota.FileScope
@@ -24,15 +26,20 @@ class AndroidFileCreator(private val context: Context) : FileCreator {
     private suspend fun save(
         name: String,
         content: ByteArray,
-    ): FileCreationResult {
-        if (name.isValidFileName()) return InvalidFileName(name)
+    ): FileCreationResult<FileCreationExplanation> {
+        val reasons = mutableListOf<FileCreationExplanation>()
+        if (!name.isValidFileName()) {
+            reasons.add(InvalidFileName(name))
+        }
 
         val dir = File(context.filesDir, "tmp")
         if (!dir.exists()) dir.mkdirs()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD && context.filesDir.freeSpace <= content.size) {
-            return OutOfMemory
+            reasons.add(OutOfMemory)
         }
+
+        if (reasons.isNotEmpty()) return Failure(reasons)
 
         val file = File(dir, name)
         withContext(Dispatchers.IO) {

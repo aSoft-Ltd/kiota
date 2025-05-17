@@ -7,11 +7,14 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import kiota.Cancelled
+import kiota.Failure
 import kiota.File
+import kiota.FileExportExplanation
+import kiota.FileExportResult
 import kiota.FileExposer
 import kiota.FileManager
 import kiota.FileScope
-import kiota.SingleFileResponse
+import kiota.OpenerNotFound
 import kiota.file.mime.All
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +44,7 @@ class AndroidFileExposer(
         }
     }
 
-    override suspend fun export(file: File): SingleFileResponse {
+    override suspend fun export(file: File): FileExportResult<FileExportExplanation> {
         val info = FileInfo(activity, file)
         val l = launcher ?: throw IllegalStateException("Permission manager not registered")
         l.launch(info.name())
@@ -61,7 +64,7 @@ class AndroidFileExposer(
         os.close()
     }
 
-    override suspend fun share(file: File): SingleFileResponse {
+    override suspend fun share(file: File): FileExportResult<FileExportExplanation> {
         val tmp = JFile(activity.filesDir, folders.shared)
         if (!tmp.exists()) tmp.mkdirs()
 
@@ -86,13 +89,11 @@ class AndroidFileExposer(
         // Create a chooser intent to allow the user to select an app
         val chooserIntent = Intent.createChooser(shareIntent, "Share file via")
 
-        try {
+        return try {
             activity.startActivity(chooserIntent)
-            return file
+            file
         } catch (e: android.content.ActivityNotFoundException) {
-            // Handle the case where no suitable app is found
-//            Toast.makeText(context, "No app found to handle file sharing", Toast.LENGTH_SHORT).show()
-            throw e // TODO: Handle exceptions gracefully
+            Failure(OpenerNotFound(file))
         }
     }
 

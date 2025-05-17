@@ -7,6 +7,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import kiota.FileScope
 import kiota.MultiPickingResult
+import kiota.PickingExplanation
 import kiota.file.PickerLimit
 import kiota.file.mime.Image
 import kiota.file.mime.MediaMime
@@ -35,7 +36,7 @@ internal class AndroidMultiMediaPicker(private val activity: ComponentActivity) 
     suspend fun open(
         mimes: Collection<MediaMime>,
         limit: PickerLimit,
-    ): MultiPickingResult {
+    ): MultiPickingResult<PickingExplanation> {
         if (mimes.isEmpty()) return open(listOf(Image, Video), limit)
         val l = launcher ?: throw IllegalStateException("AndroidFileChooser has not been registered")
         val request = PickVisualMediaRequest.Builder()

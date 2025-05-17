@@ -79,8 +79,8 @@ class AndroidFileManager(
 
     override suspend fun create(content: ByteArray, name: String, type: Mime) = creator.create(content, name, type)
     override suspend fun create(content: String, name: String, type: Mime) = creator.create(content, name, type)
-    override suspend fun export(file: File): SingleFileResponse = saver.export(file)
-    override suspend fun share(file: File): SingleFileResponse = saver.share(file)
+    override suspend fun export(file: File) = saver.export(file)
+    override suspend fun share(file: File) = saver.share(file)
 
     override fun picker(mimes: Collection<MediaMime>, limit: MemorySize) = factory.picker(mimes, limit)
     override fun picker(mimes: Collection<MediaMime>, limit: PickerLimit) = factory.picker(mimes, limit)

@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import kiota.Cancelled
 import kiota.FileScope
 import kiota.MemorySize
+import kiota.PickingExplanation
 import kiota.SinglePickingResult
 import kiota.file.PickerLimit
 import kiota.file.mime.All
@@ -35,7 +36,7 @@ internal class AndroidSingleFilePicker(private val activity: ComponentActivity) 
     suspend fun open(
         mimes: Collection<Mime>,
         limit: MemorySize,
-    ): SinglePickingResult {
+    ): SinglePickingResult<PickingExplanation> {
         if (mimes.isEmpty()) return open(listOf(All), limit)
         val l = launcher ?: throw IllegalStateException("AndroidFileChooser has not been registered")
         l.launch(mimes.map { it.text }.toTypedArray())

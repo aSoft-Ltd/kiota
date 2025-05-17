@@ -6,10 +6,11 @@ import android.net.Uri
 import androidx.core.content.FileProvider
 import kiota.Failure
 import kiota.File
+import kiota.FileOpenExplanation
+import kiota.FileOpenResult
 import kiota.FileOpener
 import kiota.FileScope
-import kiota.SingleFileResponse
-import kiota.file.response.ResponseError
+import kiota.UnknownFile
 
 /**
  * Requires to have a FileProvider defined in AndroidManifest.xml
@@ -38,19 +39,19 @@ class AndroidFileOpener(
     private val authority: String = "${context.applicationContext.packageName}.fileprovider"
 ) : FileOpener {
 
-    private fun openPrivate(file: java.io.File, mimeType: String?): SingleFileResponse {
-        val uri = FileProvider.getUriForFile(context, authority, file)
-        return open(uri, mimeType)
-    }
+    private fun openPrivate(file: java.io.File, mimeType: String?) = open(
+        uri = FileProvider.getUriForFile(context, authority, file),
+        mimeType = mimeType
+    )
 
-    private fun openPublic(file: File, mimeType: String?): SingleFileResponse {
-        val uri = file.toUri() ?: return Failure(
-            reasons = listOf(ResponseError.UnknownFileType(file))
+    private fun openPublic(file: File, mimeType: String?) = run {
+        return@run open(
+            uri = file.toUri() ?: return Failure(UnknownFile(file)),
+            mimeType = mimeType
         )
-        return open(uri, mimeType)
     }
 
-    private fun open(uri: Uri, mimeType: String?): SingleFileResponse {
+    private fun open(uri: Uri, mimeType: String?): FileOpenResult<FileOpenExplanation> {
         val newIntent = Intent(Intent.ACTION_VIEW)
         newIntent.setDataAndType(uri, mimeType)
         newIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -58,7 +59,7 @@ class AndroidFileOpener(
         return FileUri(uri, FileScope.public)
     }
 
-    override suspend fun open(file: File): SingleFileResponse {
+    override suspend fun open(file: File): FileOpenResult<FileOpenExplanation> {
         val mimeType = file.mimeType(context)
         return when (file) {
             is FilePath -> openPrivate(java.io.File(file.path), mimeType)
@@ -66,5 +67,5 @@ class AndroidFileOpener(
         }
     }
 
-    override suspend fun open(url: String): SingleFileResponse = open(File(url, FileScope.public))
+    override suspend fun open(url: String) = open(File(url, FileScope.public))
 }
