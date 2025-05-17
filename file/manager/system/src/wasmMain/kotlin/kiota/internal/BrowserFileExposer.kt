@@ -1,15 +1,16 @@
 package kiota.internal
 
 import kiota.Failure
-import kiota.FileSaver
+import kiota.File
+import kiota.FileExposer
 import kiota.SingleFileResponse
 import kiota.file.response.ResponseError
 import kotlinx.browser.document
 import org.w3c.dom.HTMLAnchorElement
 import org.w3c.dom.url.URL
 
-internal class BrowserFileSaver : FileSaver {
-    override suspend fun saveAs(file: kiota.File): SingleFileResponse {
+internal class BrowserFileExposer : FileExposer {
+    override suspend fun export(file: File): SingleFileResponse {
         when (file) {
             is FileUrl -> {
                 save(file.url, file.name)
@@ -36,4 +37,6 @@ internal class BrowserFileSaver : FileSaver {
         a.click()
         a.remove()
     }
+
+    override suspend fun share(file: File): SingleFileResponse = export(file)
 }

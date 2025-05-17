@@ -7,7 +7,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import kiota.Cancelled
 import kiota.File
 import kiota.FileReader
-import kiota.FileSaver
+import kiota.FileExposer
+import kiota.FileScope
 import kiota.SingleFileResponse
 import kiota.file.mime.All
 import kotlinx.coroutines.CoroutineScope
@@ -17,10 +18,10 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class AndroidFileSaver(
+class AndroidFileExposer(
     private val activity: ComponentActivity,
     private val reader: FileReader,
-) : FileSaver {
+) : FileExposer {
     private var scope: CoroutineScope? = null
     private var launcher: ActivityResultLauncher<String>? = null
     private val results by lazy { Channel<Uri?>() }
@@ -33,7 +34,7 @@ class AndroidFileSaver(
         }
     }
 
-    override suspend fun saveAs(file: File): SingleFileResponse {
+    override suspend fun export(file: File): SingleFileResponse {
         val info = FileInfo(activity, file)
         val l = launcher ?: throw IllegalStateException("Permission manager not registered")
         l.launch(info.name())
@@ -46,7 +47,7 @@ class AndroidFileSaver(
             dos.flush()
             dos.close()
         }
-        return File(dst)
+        return File(dst, FileScope.public)
     }
 
     fun unregister() {

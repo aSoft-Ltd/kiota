@@ -4,11 +4,14 @@ import kiota.file.mime.Application
 import kiota.file.mime.Mime
 import kiota.file.mime.Text
 
+/**
+ * An interface to help create files in the private/sandbox directory
+ */
 interface FileCreator {
     /**
-     * Creates a file with [content] inside the private/app directory
+     * Creates a file with [content] inside the private/sandbox directory
      *
-     * @return [SingleFileResponse] when the file was successfully created
+     * @return [SingleFileResponse]
      */
     suspend fun create(
         content: ByteArray,
@@ -18,9 +21,9 @@ interface FileCreator {
 
 
     /**
-     * Creates a file with [content] inside the private/app directory
+     * Creates a file with [content] inside the private/private directory
      *
-     * @return [SingleFileResponse] when the file was successfully created
+     * @return [SingleFileResponse]
      */
     suspend fun create(
         content: String,

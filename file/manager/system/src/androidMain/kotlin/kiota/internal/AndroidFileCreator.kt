@@ -2,6 +2,7 @@ package kiota.internal
 
 import android.content.Context
 import kiota.FileCreator
+import kiota.FileScope
 import kiota.SingleFileResponse
 import kiota.file.mime.Mime
 import kotlinx.coroutines.Dispatchers
@@ -9,7 +10,6 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
-
 
 class AndroidFileCreator(private val context: Context) : FileCreator {
 
@@ -40,6 +40,6 @@ class AndroidFileCreator(private val context: Context) : FileCreator {
             fos.flush()
             fos.close()
         }
-        return kiota.internal.File(file.path)
+        return File(file.path, FileScope.public)
     }
 }

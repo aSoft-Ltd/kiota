@@ -4,30 +4,18 @@ package kiota.internal
 
 import kiota.Cancelled
 import kiota.Denied
-import kiota.Failure
 import kiota.File
-import kiota.FileSaver
+import kiota.FileExposer
 import kiota.SingleFileResponse
-import kiota.file.mime.Mime
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.withContext
-import platform.Foundation.NSData
-import platform.Foundation.NSDataBase64DecodingIgnoreUnknownCharacters
-import platform.Foundation.NSFileManager
 import platform.Foundation.NSURL
-import platform.Foundation.create
-import platform.Foundation.temporaryDirectory
-import platform.Foundation.writeToURL
 import platform.UIKit.UIDocumentPickerDelegateProtocol
 import platform.UIKit.UIDocumentPickerViewController
 import platform.UIKit.UIViewController
 import platform.darwin.NSObject
-import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
-class OsxFileSaver : FileSaver {
+class OsxFileExposer : FileExposer {
 
     private var host: UIViewController? = null
     private val results = Channel<NSURL?>()
@@ -50,7 +38,7 @@ class OsxFileSaver : FileSaver {
         }
     }
 
-    override suspend fun saveAs(file: File): SingleFileResponse {
+    override suspend fun export(file: File): SingleFileResponse {
         if (file !is FileUrl) return Denied
         val picker = UIDocumentPickerViewController(forExportingURLs = listOf(file.url), asCopy = true)
 

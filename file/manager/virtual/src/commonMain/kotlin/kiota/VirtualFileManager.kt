@@ -7,7 +7,7 @@ import kiota.internal.TestFileInfo
 class VirtualFileManager(
     private val files: MutableMap<String, File> = mutableMapOf()
 ) : FileManager,
-    FileSaver,
+    FileExposer,
     FileDeleter,
     FileCreator by VirtualFileCreator(files),
     FileOpener by VirtualFileOpener(files),
@@ -28,7 +28,7 @@ class VirtualFileManager(
         else -> throw IllegalArgumentException("Unsupported file type")
     }
 
-    override suspend fun saveAs(file: File): SingleFileResponse = file
+    override suspend fun export(file: File): SingleFileResponse = file
 
     override fun delete(file: File): Boolean {
         if (!files.containsValue(file)) return false

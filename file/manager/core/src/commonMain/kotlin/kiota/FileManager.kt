@@ -1,9 +1,8 @@
 package kiota
 
-import kiota.file.FilePickers
+import kiota.file.FilePickerFactory
 
-interface FileManager : FileOpener, FileCreator, FileReader, FileSaver, FileDeleter {
-    val pickers: FilePickers<*, *, *, *>
-    fun exists(file: File): Boolean
-    fun info(file: File): FileInfo
-}
+/**
+ * A quick way to manage files with in the app's private/sandbox.
+ */
+interface FileManager : FileOpener, FileCreator, FileReader, FileExposer, FileDeleter, FilePickerFactory, FileInformer

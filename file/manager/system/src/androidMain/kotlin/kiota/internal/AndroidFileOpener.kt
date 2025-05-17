@@ -8,6 +8,7 @@ import androidx.core.content.FileProvider
 import kiota.Failure
 import kiota.File
 import kiota.FileOpener
+import kiota.FileScope
 import kiota.SingleFileResponse
 import kiota.file.response.ResponseError
 import java.io.File as JFile
@@ -55,7 +56,7 @@ class AndroidFileOpener(private val context: Context) : FileOpener {
         newIntent.setDataAndType(uri, mimeType)
         newIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         context.startActivity(newIntent)
-        return FileUri(uri)
+        return FileUri(uri, FileScope.public)
     }
 
     override suspend fun open(file: File): SingleFileResponse {
@@ -68,5 +69,5 @@ class AndroidFileOpener(private val context: Context) : FileOpener {
         }
     }
 
-    override suspend fun open(url: String): SingleFileResponse = open(File(url))
+    override suspend fun open(url: String): SingleFileResponse = open(File(url, FileScope.public))
 }

@@ -9,7 +9,7 @@ import kiota.internal.OsxFileCreator
 import kiota.internal.OsxFileDeleter
 import kiota.internal.OsxFileOpener
 import kiota.internal.OsxFileReader
-import kiota.internal.OsxFileSaver
+import kiota.internal.OsxFileExposer
 import platform.Foundation.NSFileManager
 import platform.UIKit.UIViewController
 
@@ -28,7 +28,7 @@ class IosFileManager :
         )
     }
 
-    private val saver by lazy { OsxFileSaver() }
+    private val saver by lazy { OsxFileExposer() }
     private val opener by lazy { OsxFileOpener() }
 
     fun initialize(host: UIViewController) {
@@ -52,7 +52,7 @@ class IosFileManager :
         else -> throw IllegalArgumentException("Unsupported file type on IOS")
     }
 
-    override suspend fun saveAs(file: File): SingleFileResponse = saver.saveAs(file)
+    override suspend fun export(file: File): SingleFileResponse = saver.export(file)
 
     override suspend fun open(file: File) = opener.open(file)
     override suspend fun open(url: String) = opener.open(url)

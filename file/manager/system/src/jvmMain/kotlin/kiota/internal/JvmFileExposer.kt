@@ -2,21 +2,22 @@ package kiota.internal
 
 import kiota.Cancelled
 import kiota.Failure
-import kiota.FileSaver
+import kiota.File
+import kiota.FileExposer
 import kiota.SingleFileResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import javax.swing.JFileChooser
 import javax.swing.SwingUtilities
 import kotlin.coroutines.resume
+import java.io.File as JFile
 
-internal class JvmFileSaver : FileSaver {
+internal class JvmFileExposer : FileExposer {
 
-    private suspend fun directory(): File? {
+    private suspend fun directory(): JFile? {
         val chooser = JFileChooser().apply {
             fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
             isMultiSelectionEnabled = false
@@ -35,11 +36,11 @@ internal class JvmFileSaver : FileSaver {
         }
     }
 
-    override suspend fun saveAs(file: kiota.File): SingleFileResponse {
+    override suspend fun export(file: File): SingleFileResponse {
         val src = file.toFileOrNull() ?: return Failure(errors = listOf())
         val directory = directory() ?: return Cancelled
         return withContext(Dispatchers.IO) {
-            val dst = File(directory, src.name).apply { createNewFile() }
+            val dst = JFile(directory, src.name).apply { createNewFile() }
             val sis = FileInputStream(src)
             val dos = FileOutputStream(dst)
             dos.write(sis.readAllBytes())
@@ -49,4 +50,6 @@ internal class JvmFileSaver : FileSaver {
             FileImpl(dst.path)
         }
     }
+
+    override suspend fun share(file: File): SingleFileResponse = export(file)
 }
