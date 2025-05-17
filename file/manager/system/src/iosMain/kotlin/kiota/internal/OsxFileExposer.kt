@@ -3,10 +3,12 @@
 package kiota.internal
 
 import kiota.Cancelled
-import kiota.Denied
+import kiota.Failure
 import kiota.File
+import kiota.FileExportExplanation
+import kiota.FileExportResult
 import kiota.FileExposer
-import kiota.SingleFileResponse
+import kiota.UnknownFile
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
 import kotlinx.coroutines.channels.Channel
@@ -40,8 +42,8 @@ internal class OsxFileExposer(private val host: UIViewController) : FileExposer 
         }
     }
 
-    override suspend fun export(file: File): Boolean {
-        if (file !is FileUrl) return Denied
+    override suspend fun export(file: File): FileExportResult<FileExportExplanation> {
+        if (file !is FileUrl) return Failure(UnknownFile(file))
         val picker = UIDocumentPickerViewController(forExportingURLs = listOf(file.url), asCopy = true)
 
         picker.allowsMultipleSelection = false
@@ -54,8 +56,8 @@ internal class OsxFileExposer(private val host: UIViewController) : FileExposer 
         return FileUrl(url)
     }
 
-    override suspend fun share(file: File): SingleFileResponse {
-        if (file !is FileUrl) return Cancelled
+    override suspend fun share(file: File): FileExportResult<FileExportExplanation> {
+        if (file !is FileUrl) return Failure(UnknownFile(file))
         val url = file.url
         val activity = UIActivityViewController(activityItems = listOf(url), applicationActivities = null)
 
@@ -67,6 +69,6 @@ internal class OsxFileExposer(private val host: UIViewController) : FileExposer 
             activity.popoverPresentationController?.permittedArrowDirections = 0uL
         }
         host.presentViewController(activity, animated = true, completion = null)
-        return file // TODO: Handle file sharing results
+        return file
     }
 }

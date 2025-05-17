@@ -1,5 +1,9 @@
 package kiota.internal
 
+import kiota.File
+import kiota.FileOpenExplanation
+import kiota.FileOpenResult
+import kiota.FileOpener
 import kotlinx.coroutines.suspendCancellableCoroutine
 import platform.Foundation.NSURL
 import platform.UIKit.UIDocumentInteractionController
@@ -7,9 +11,6 @@ import platform.UIKit.UIDocumentInteractionControllerDelegateProtocol
 import platform.UIKit.UIViewController
 import platform.UniformTypeIdentifiers.UTTypeFileURL
 import platform.darwin.NSObject
-import kiota.FileOpener
-import kiota.File
-import kiota.SingleFileResponse
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -18,7 +19,7 @@ internal class OsxFileOpener(private val host: UIViewController) : FileOpener {
         override fun documentInteractionControllerViewControllerForPreview(controller: UIDocumentInteractionController) = host
     }
 
-    private fun open(url: NSURL): SingleFileResponse {
+    private fun open(url: NSURL): FileOpenResult<FileOpenExplanation> {
         val controller = UIDocumentInteractionController()
         controller.URL = url
         controller.delegate = delegate
@@ -51,5 +52,5 @@ internal class OsxFileOpener(private val host: UIViewController) : FileOpener {
         }
     }
 
-    override suspend fun open(url: String): SingleFileResponse = open(NSURL.fileURLWithPath(url))
+    override suspend fun open(url: String) = open(NSURL.fileURLWithPath(url))
 }
