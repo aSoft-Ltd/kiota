@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import kiota.FileScope
 import kiota.MultiPickingResult
 import kiota.PickingExplanation
 import kiota.file.PickerLimit
@@ -44,7 +43,7 @@ internal class AndroidMultiMediaPicker(private val activity: ComponentActivity) 
             .setMaxItems(limit.count)
             .build()
         l.launch(request)
-        val files = results.receive().map { File(it, FileScope.public) }  // TODO: scope, check to see if this file is actually public
+        val files = results.receive().map { File(it) }  // TODO: scope, check to see if this file is actually public
         val infos = files.map { FileInfo(activity, it) }
         return files.toResult(mimes, limit, infos)
     }

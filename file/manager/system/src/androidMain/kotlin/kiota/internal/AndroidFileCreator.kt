@@ -6,13 +6,12 @@ import kiota.Failure
 import kiota.FileCreationExplanation
 import kiota.FileCreationResult
 import kiota.FileCreator
-import kiota.FileScope
 import kiota.InvalidFileName
 import kiota.OutOfMemory
 import kiota.file.mime.Mime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.File
+import java.io.File as JFile
 import java.io.FileOutputStream
 
 class AndroidFileCreator(private val context: Context) : FileCreator {
@@ -32,7 +31,7 @@ class AndroidFileCreator(private val context: Context) : FileCreator {
             reasons.add(InvalidFileName(name))
         }
 
-        val dir = File(context.filesDir, "tmp")
+        val dir = JFile(context.filesDir, "tmp")
         if (!dir.exists()) dir.mkdirs()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD && context.filesDir.freeSpace <= content.size) {
@@ -41,7 +40,7 @@ class AndroidFileCreator(private val context: Context) : FileCreator {
 
         if (reasons.isNotEmpty()) return Failure(reasons)
 
-        val file = File(dir, name)
+        val file = JFile(dir, name)
         withContext(Dispatchers.IO) {
             file.createNewFile()
             val fos = FileOutputStream(file)
@@ -49,6 +48,6 @@ class AndroidFileCreator(private val context: Context) : FileCreator {
             fos.flush()
             fos.close()
         }
-        return File(file.path, FileScope.public)
+        return File(file.path)
     }
 }

@@ -9,7 +9,6 @@ import kiota.File
 import kiota.FileOpenExplanation
 import kiota.FileOpenResult
 import kiota.FileOpener
-import kiota.FileScope
 import kiota.UnknownFile
 
 /**
@@ -56,7 +55,7 @@ class AndroidFileOpener(
         newIntent.setDataAndType(uri, mimeType)
         newIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         context.startActivity(newIntent)
-        return FileUri(uri, FileScope.public)
+        return FileUri(uri)
     }
 
     override suspend fun open(file: File): FileOpenResult<FileOpenExplanation> {
@@ -67,5 +66,5 @@ class AndroidFileOpener(
         }
     }
 
-    override suspend fun open(url: String) = open(File(url, FileScope.public))
+    override suspend fun open(url: String) = open(File(url))
 }

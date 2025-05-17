@@ -119,8 +119,7 @@ internal fun PickedFile(
                     )
                     message = when (result) {
                         is File -> "File saved successfully"
-                        is Failure -> "Failed to save file: ${result.reasons.joinToString(", ") { it.message ?: "" }}"
-                        else -> "File save cancelled"
+                        is Failure -> "Failed to save file:\n${result.message}"
                     }
                     delay(3000)
                     message = null

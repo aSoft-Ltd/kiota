@@ -13,7 +13,6 @@ import kiota.FileExportExplanation
 import kiota.FileExportResult
 import kiota.FileExposer
 import kiota.FileManager
-import kiota.FileScope
 import kiota.OpenerNotFound
 import kiota.file.mime.All
 import kotlinx.coroutines.CoroutineScope
@@ -55,7 +54,7 @@ class AndroidFileExposer(
             )
             file.writeTo(dos)
         }
-        return File(dst, FileScope.public)
+        return File(dst)
     }
 
     private suspend fun File.writeTo(os: OutputStream) = withContext(Dispatchers.IO) {

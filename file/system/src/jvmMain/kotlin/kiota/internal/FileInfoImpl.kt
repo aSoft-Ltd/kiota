@@ -1,7 +1,6 @@
 package kiota.internal
 
 import kiota.FileInfo
-import kiota.FileScope
 import kiota.MemorySize
 import kiota.MemoryUnit
 import kiota.Multiplier
@@ -24,6 +23,4 @@ class FileInfoImpl(override val file: FileImpl) : FileInfo {
         unit = MemoryUnit.Bytes,
         multiplier = Multiplier.Unit
     )
-
-    override fun scope(): FileScope = FileScope.public
 }

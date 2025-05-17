@@ -3,7 +3,6 @@ package kiota.internal
 import kiota.FileCreationExplanation
 import kiota.FileCreationResult
 import kiota.FileCreator
-import kiota.FileScope
 import kiota.file.mime.Mime
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.set
@@ -33,6 +32,6 @@ internal class BrowserFileCreator : FileCreator {
 
     private fun create(content: JsAny?, name: String, type: Mime): FileCreationResult<FileCreationExplanation> {
         val file = File(arrayOf(content).toJsArray(), fileName = name, options = FilePropertyBag(type = type.text))
-        return FileImpl(file, FileScope.private)
+        return FileImpl(file)
     }
 }

@@ -3,7 +3,6 @@
 package kiota.internal
 
 import kiota.FileInfo
-import kiota.FileScope
 import kiota.MemorySize
 import kiota.MemoryUnit
 import kiota.Multiplier
@@ -40,6 +39,4 @@ class FileInfoPath(override val file: FileUrl) : FileInfo {
             multiplier = Multiplier.Unit
         )
     }
-
-    override fun scope(): FileScope = FileScope.private
 }

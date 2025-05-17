@@ -43,7 +43,7 @@ abstract class AbstractPicker {
     private fun FileList.toList(): List<FileImpl> = buildList {
         for (i in 0 until length) {
             val file = item(i) ?: continue
-            add(FileImpl(file, FileScope.public))
+            add(FileImpl(file))
         }
     }
 }

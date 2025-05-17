@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import kiota.Cancelled
-import kiota.FileScope
 import kiota.MemorySize
 import kiota.PickingExplanation
 import kiota.SinglePickingResult
@@ -41,7 +40,7 @@ internal class AndroidSingleFilePicker(private val activity: ComponentActivity) 
         val l = launcher ?: throw IllegalStateException("AndroidFileChooser has not been registered")
         l.launch(mimes.map { it.text }.toTypedArray())
         val uri = results.receive() ?: return Cancelled
-        val files = listOf(FileUri(uri, FileScope.public))   // TODO: scope, check to see if this file is actually public
+        val files = listOf(FileUri(uri))   // TODO: scope, check to see if this file is actually public
         val infos = files.map { FileInfoUri(activity, it) }
         return files.toResult(mimes, PickerLimit(limit, 1), infos).toSingle()
     }

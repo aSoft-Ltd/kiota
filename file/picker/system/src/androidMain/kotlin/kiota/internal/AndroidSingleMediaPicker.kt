@@ -6,7 +6,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import kiota.Cancelled
-import kiota.FileScope
 import kiota.MemorySize
 import kiota.PickingExplanation
 import kiota.SinglePickingResult
@@ -47,7 +46,7 @@ internal class AndroidSingleMediaPicker(private val activity: ComponentActivity)
             .build()
         l.launch(request)
         val uri = results.receive() ?: return Cancelled
-        val files = listOf(File(uri, FileScope.public))
+        val files = listOf(File(uri))
         val infos = files.map { FileInfo(activity, it) }
         return files.toResult(mimes, PickerLimit(limit, 1), infos).toSingle()
     }
