@@ -1,15 +1,15 @@
 package kiota
 
-import kotlinx.browser.window
-import kotlinx.coroutines.suspendCancellableCoroutine
-import org.w3c.dom.HTMLInputElement
-import org.w3c.files.FileList
 import kiota.file.PickerLimit
 import kiota.file.mime.All
 import kiota.file.mime.Mime
 import kiota.file.toResponse
 import kiota.internal.BrowserFileInfo
 import kiota.internal.FileImpl
+import kotlinx.browser.window
+import kotlinx.coroutines.suspendCancellableCoroutine
+import org.w3c.dom.HTMLInputElement
+import org.w3c.files.FileList
 import kotlin.coroutines.resume
 
 abstract class AbstractFilePicker {
@@ -27,7 +27,7 @@ abstract class AbstractFilePicker {
         val input = input(mimes, limit.count)
         val files = suspendCancellableCoroutine<List<FileImpl>> { cont ->
             input.oncancel = { cont.resume(emptyList()) }
-            input.onchange = { cont.resume(input.files?.toList() ?: emptyList())  }
+            input.onchange = { cont.resume(input.files?.toList() ?: emptyList()) }
             input.click()
         }
         input.remove()
@@ -43,7 +43,7 @@ abstract class AbstractFilePicker {
     private fun FileList.toList(): List<FileImpl> = buildList {
         for (i in 0 until length) {
             val file = item(i) ?: continue
-            add(FileImpl(file))
+            add(FileImpl(file, FileScope.public))
         }
     }
 }

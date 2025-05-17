@@ -1,12 +1,12 @@
 package kiota
 
-import kiota.file.FilePickers
+import kiota.file.FilePickerFactory
 import kiota.internal.BrowserFileCreator
 import kiota.internal.BrowserFileDeleter
+import kiota.internal.BrowserFileExposer
 import kiota.internal.BrowserFileInfo
 import kiota.internal.BrowserFileOpener
 import kiota.internal.BrowserFileReader
-import kiota.internal.BrowserFileExposer
 import kiota.internal.FileImpl
 import kiota.FileReader as MppFileReader
 
@@ -16,16 +16,8 @@ class BrowserFileManager :
     FileCreator by BrowserFileCreator(),
     FileDeleter by BrowserFileDeleter(),
     FileOpener by BrowserFileOpener(),
-    FileExposer by BrowserFileExposer() {
-
-    override val pickers by lazy {
-        FilePickers(
-            documents = BrowserMultiFilePicker(),
-            document = BrowserSingleFilePicker(),
-            medias = BrowserMultiMediaPicker(),
-            media = BrowserSingleMediaPicker()
-        )
-    }
+    FileExposer by BrowserFileExposer(),
+    FilePickerFactory by BrowserFilePickerFactory() {
 
     override fun exists(file: File): Boolean = true
 
@@ -33,4 +25,6 @@ class BrowserFileManager :
         is FileImpl -> BrowserFileInfo(file)
         else -> throw IllegalArgumentException("Unsupported file type: $file")
     }
+
+    override fun canShare(): Boolean = false
 }

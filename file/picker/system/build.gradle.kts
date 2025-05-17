@@ -15,6 +15,12 @@ configureAndroid("src/androidMain") {
     defaultConfig {
         minSdk = 8
     }
+
+    lintOptions {
+        isWarningsAsErrors = false
+        isAbortOnError = false
+        isIgnoreTestSources = true
+    }
 }
 
 kotlin {

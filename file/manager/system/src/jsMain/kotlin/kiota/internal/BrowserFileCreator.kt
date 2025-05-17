@@ -1,6 +1,7 @@
 package kiota.internal
 
 import kiota.FileCreator
+import kiota.FileScope
 import kiota.SingleFileResponse
 import kiota.file.mime.Mime
 import org.khronos.webgl.Int8Array
@@ -31,6 +32,6 @@ internal class BrowserFileCreator : FileCreator {
 
     private fun save(content: Any?, name: String, type: Mime): SingleFileResponse {
         val file = File(arrayOf(content), fileName = name, options = FilePropertyBag(type = type.text))
-        return FileImpl(file)
+        return FileImpl(file, FileScope.private)
     }
 }

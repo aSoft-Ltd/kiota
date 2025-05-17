@@ -1,6 +1,7 @@
 package kiota.internal
 
 import kiota.Failure
+import kiota.File
 import kiota.FileExposer
 import kiota.SingleFileResponse
 import kiota.file.response.ResponseError
@@ -36,4 +37,6 @@ internal class BrowserFileExposer : FileExposer {
         a.click()
         a.remove()
     }
+
+    override suspend fun share(file: File): SingleFileResponse = export(file)
 }
