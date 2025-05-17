@@ -31,7 +31,9 @@ internal fun FileSaver(files: FileManager) {
                             "File saved successfully"
                         }
 
-                        is FileCreationError -> "Failed to save file: OutOfMemory: ${result.message}"
+                        is Failure<*> -> {
+                            "Failed to save file: ${result.reasons.joinToString(separator = "\n") { it.message }}"
+                        }
                     }
                     delay(3000)
                     message = null
@@ -57,7 +59,7 @@ internal fun FileSaver(files: FileManager) {
                             "File saved successfully"
                         }
 
-                        is FileCreationError -> "Failed to save file: ${result.message}"
+                        is Failure<*> -> "Failed to save file:\n${result.message}"
                     }
                     delay(3000)
                     message = null

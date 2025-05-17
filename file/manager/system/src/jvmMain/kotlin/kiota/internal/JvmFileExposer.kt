@@ -1,6 +1,9 @@
 package kiota.internal
 
+import kiota.Cancelled
+import kiota.Failure
 import kiota.File
+import kiota.FileExportExplanation
 import kiota.FileExportResult
 import kiota.FileExposer
 import kiota.UnknownFile
@@ -35,9 +38,9 @@ internal class JvmFileExposer : FileExposer {
         }
     }
 
-    override suspend fun export(file: File): FileExportResult {
-        val src = file.toFileOrNull() ?: return FileExportResult.Rejected(UnknownFile(file))
-        val directory = directory() ?: return FileExportResult.Cancelled
+    override suspend fun export(file: File): FileExportResult<FileExportExplanation> {
+        val src = file.toFileOrNull() ?: return Failure(UnknownFile(file))
+        val directory = directory() ?: return Cancelled
         return withContext(Dispatchers.IO) {
             val dst = JFile(directory, src.name).apply { createNewFile() }
             val sis = FileInputStream(src)
@@ -46,10 +49,9 @@ internal class JvmFileExposer : FileExposer {
             sis.close()
             dos.flush()
             dos.close()
-            FileExportResult.Success
-//            FileImpl(dst.path)
+            file
         }
     }
 
-    override suspend fun share(file: File): FileExportResult = export(file)
+    override suspend fun share(file: File) = export(file)
 }

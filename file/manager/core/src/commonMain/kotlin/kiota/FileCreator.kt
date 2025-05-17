@@ -17,7 +17,7 @@ interface FileCreator {
         content: ByteArray,
         name: String = "file.bin",
         type: Mime = Application.OctetStream
-    ): FileCreationResult
+    ): FileCreationResult<FileCreationExplanation>
 
 
     /**
@@ -29,5 +29,5 @@ interface FileCreator {
         content: String,
         name: String = "file.txt",
         type: Mime = Text.Plain
-    ): FileCreationResult
+    ): FileCreationResult<FileCreationExplanation>
 }

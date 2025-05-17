@@ -1,5 +1,6 @@
 package kiota.internal
 
+import kiota.FileCreationExplanation
 import kiota.FileCreationResult
 import kiota.FileCreator
 import kiota.FileScope
@@ -30,7 +31,7 @@ internal class BrowserFileCreator : FileCreator {
         type = type
     )
 
-    private fun create(content: JsAny?, name: String, type: Mime): FileCreationResult {
+    private fun create(content: JsAny?, name: String, type: Mime): FileCreationResult<FileCreationExplanation> {
         val file = File(arrayOf(content).toJsArray(), fileName = name, options = FilePropertyBag(type = type.text))
         return FileImpl(file, FileScope.private)
     }

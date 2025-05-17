@@ -16,7 +16,7 @@ abstract class AbstractPicker {
     protected suspend fun show(
         mimes: Collection<Mime>,
         limit: PickerLimit
-    ): MultiPickingResult {
+    ): MultiPickingResult<PickingExplanation> {
         if (mimes.isEmpty()) return show(listOf(All), limit)
         if (limit.count <= 0) return Cancelled
         if (limit.size <= MemorySize.Zero) return Cancelled

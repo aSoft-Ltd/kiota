@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
 import kiota.file.PickerLimit
+import kiota.file.mime.All
 import kiota.file.mime.Mime
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -29,7 +30,7 @@ internal fun FilesPicker(
     Column {
         val picked = remember { mutableStateListOf<File>() }
         val denied = remember { mutableStateOf(false) }
-        val errors = remember { mutableStateListOf<PickingError>() }
+        val errors = remember { mutableStateListOf<PickingExplanation>() }
         Row {
             Button(
                 onClick = {
@@ -37,7 +38,7 @@ internal fun FilesPicker(
                         when (val result = files.picker(limit = PickerLimit(size = 10.MB, count = 2)).open()) {
                             Cancelled -> {}
                             Denied -> denied.value = true
-                            is PickingError -> errors += result.all()
+                            is Failure -> errors += result
                             is Files -> picked += result
                         }
                     }
@@ -49,10 +50,10 @@ internal fun FilesPicker(
             Button(
                 onClick = {
                     scope.launch {
-                        when (val result = files.picker().open()) {
+                        when (val result = files.picker(mime = All).open()) {
                             is Cancelled -> {}
                             is Denied -> denied.value = true
-                            is PickingError -> errors += result
+                            is Failure -> errors += result
                             is File -> picked += result
                         }
                     }
@@ -118,7 +119,7 @@ internal fun PickedFile(
                     )
                     message = when (result) {
                         is File -> "File saved successfully"
-                        is Failure -> "Failed to save file: ${result.errors.joinToString(", ") { it.message ?: "" }}"
+                        is Failure -> "Failed to save file: ${result.reasons.joinToString(", ") { it.message ?: "" }}"
                         else -> "File save cancelled"
                     }
                     delay(3000)

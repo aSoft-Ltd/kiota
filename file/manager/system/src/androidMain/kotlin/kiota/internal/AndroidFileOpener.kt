@@ -45,7 +45,7 @@ class AndroidFileOpener(
 
     private fun openPublic(file: File, mimeType: String?): SingleFileResponse {
         val uri = file.toUri() ?: return Failure(
-            errors = listOf(ResponseError.UnknownFileType(file))
+            reasons = listOf(ResponseError.UnknownFileType(file))
         )
         return open(uri, mimeType)
     }

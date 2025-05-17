@@ -34,7 +34,7 @@ abstract class AbstractPicker {
         return files
     }
 
-    protected suspend fun show(mimes: Collection<Mime>, limit: PickerLimit): MultiPickingResult {
+    protected suspend fun show(mimes: Collection<Mime>, limit: PickerLimit): MultiPickingResult<PickingExplanation> {
         val files = files(mimes, limit)
         val infos = files.map { BrowserFileInfo(it) }
         return files.toResult(mimes, limit, infos)

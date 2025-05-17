@@ -25,4 +25,8 @@ package kiota
  * ## Everywhere else
  * A local file is an instance of a path to a file on disk
  */
-interface File : SingleFileResponse, SinglePickingResult, FileCreationResult
+interface File :
+    FileCreationResult<Nothing>,
+    FileExportResult<Nothing>,
+    FileOpenResult<Nothing>,
+    SinglePickingResult<Nothing>

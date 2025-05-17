@@ -17,7 +17,7 @@ class BrowserFileOpener : FileOpener {
             URL.revokeObjectURL(url)
             return file
         }
-        return Failure(errors = listOf(ResponseError.UnknownFileType(file)))
+        return Failure(reasons = listOf(ResponseError.UnknownFileType(file)))
     }
 
     override suspend fun open(url: String): SingleFileResponse {

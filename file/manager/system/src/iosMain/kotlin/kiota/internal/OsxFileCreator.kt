@@ -2,10 +2,10 @@
 
 package kiota.internal
 
-import kiota.InvalidFileNameError
+import kiota.InvalidFileName
 import kiota.FileCreationResult
 import kiota.FileCreator
-import kiota.OutOfMemoryError
+import kiota.OutOfMemory
 import kiota.file.mime.Mime
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -25,11 +25,11 @@ class OsxFileCreator : FileCreator {
 
     override suspend fun create(content: ByteArray, name: String, type: Mime): FileCreationResult {
         val tmp = NSFileManager.defaultManager.temporaryDirectory
-        val src = tmp.URLByAppendingPathComponent(name) ?: return InvalidFileNameError(name)
+        val src = tmp.URLByAppendingPathComponent(name) ?: return InvalidFileName(name)
         val data = NSData.create(
             base64EncodedString = Base64.encode(content),
             options = NSDataBase64DecodingIgnoreUnknownCharacters
-        ) ?: return OutOfMemoryError
+        ) ?: return OutOfMemory
         withContext(Dispatchers.IO) {
             data.writeToURL(url = src, atomically = false)
         }

@@ -24,7 +24,7 @@ internal class BrowserFileExposer : FileExposer {
             res
         }
 
-        else -> Failure(errors = listOf(ResponseError.UnknownFileType(file)))
+        else -> Failure(reasons = listOf(ResponseError.UnknownFileType(file)))
     }
 
     private fun save(url: String, name: String) {

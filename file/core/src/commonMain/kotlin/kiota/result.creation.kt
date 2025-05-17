@@ -1,15 +1,13 @@
 package kiota
 
-sealed interface FileCreationResult
+sealed interface FileCreationResult<out E : Explanation>
 
-sealed interface FileCreationError : FileCreationResult {
-    val message: String
-}
+sealed interface FileCreationExplanation : Explanation
 
-data object OutOfMemoryError : FileCreationError {
+data object OutOfMemory : FileCreationExplanation {
     override val message = "Out of memory"
 }
 
-data class InvalidFileNameError(val name: String) : FileCreationError {
+data class InvalidFileName(val name: String) : FileCreationExplanation {
     override val message: String = "`$name` is not a valid file name"
 }

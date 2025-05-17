@@ -9,11 +9,11 @@ interface FileExposer {
      *
      * @return [FileExportResult]
      */
-    suspend fun export(file: File): FileExportResult
+    suspend fun export(file: File): FileExportResult<*>
 
     /**
      * Allows the user to share this file
      * @return [FileExportResult]
      */
-    suspend fun share(file: File): FileExportResult
+    suspend fun share(file: File): FileExportResult<*>
 }
