@@ -1,4 +1,3 @@
 package kiota.file.picker
 
-interface Quantity {
-}
+sealed interface Quantity

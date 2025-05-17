@@ -4,20 +4,19 @@ import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import kiota.file.PickerLimit
+import kiota.file.mime.All
+import kiota.file.mime.Mime
+import kiota.file.toResult
+import kiota.internal.File
+import kiota.internal.FileInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
-import kiota.file.MultiFilePicker
-import kiota.file.PickerLimit
-import kiota.file.mime.All
-import kiota.file.mime.Mime
-import kiota.file.toResponse
-import kiota.internal.FileInfo
-import kiota.internal.File
 
-class AndroidMultiFilePicker(private val activity: ComponentActivity) : MultiFilePicker {
+internal class AndroidMultiFilePicker(private val activity: ComponentActivity) {
     private var scope: CoroutineScope? = null
     private var launcher: ActivityResultLauncher<Array<String>>? = null
     private val results by lazy { Channel<List<Uri>>() }
@@ -30,16 +29,16 @@ class AndroidMultiFilePicker(private val activity: ComponentActivity) : MultiFil
         }
     }
 
-    override suspend fun open(
+    suspend fun open(
         mimes: List<Mime>,
         limit: PickerLimit,
-    ): MultiPickerResponse {
+    ): MultiPickerResult {
         if (mimes.isEmpty()) return open(listOf(All), limit)
         val l = launcher ?: throw IllegalStateException("AndroidFileChooser has not been registered")
         l.launch(mimes.map { it.text }.toTypedArray())
-        val files = results.receive().map { File(it) }
+        val files = results.receive().map { File(it, FileScope.public) } // TODO: scope, check to see if this file is actually public
         val info = files.map { FileInfo(activity, it) }
-        return files.toResponse(mimes, limit, info)
+        return files.toResult(mimes, limit, info)
     }
 
     fun unregister() {

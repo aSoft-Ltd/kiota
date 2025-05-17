@@ -10,10 +10,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.window.Dialog
-import kotlinx.coroutines.launch
 import kiota.file.PickerLimit
-import kiota.file.response.ResponseError
 import kiota.file.mime.Image
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun ImagePicker(
@@ -23,16 +22,16 @@ internal fun ImagePicker(
     Column {
         val picked = remember { mutableStateListOf<File>() }
         val denied = remember { mutableStateOf(false) }
-        val errors = remember { mutableStateListOf<ResponseError>() }
+        val errors = remember { mutableStateListOf<PickerFailure>() }
         Row {
             Button(
                 onClick = {
                     scope.launch {
-                        when (val response = files.pickers.media.open(mimes = listOf(Image))) {
+                        when (val result = files.picker(Image).open()) {
                             is Cancelled -> {}
                             is Denied -> denied.value = true
-                            is Failure -> errors += response.errors
-                            is File -> picked += response
+                            is PickerFailure -> errors += result
+                            is File -> picked += result
                         }
                     }
                 }
@@ -43,11 +42,11 @@ internal fun ImagePicker(
             Button(
                 onClick = {
                     scope.launch {
-                        when (val response = files.pickers.medias.open(mimes = listOf(Image), limit = PickerLimit(count = 4, size = 3.MB))) {
+                        when (val result = files.picker(Image, PickerLimit(count = 4, size = 3.MB)).open()) {
                             is Cancelled -> {}
                             is Denied -> denied.value = true
-                            is Failure -> errors += response
-                            is Files -> picked += response
+                            is PickerFailure -> errors += result
+                            is Files -> picked += result
                         }
                     }
                 }

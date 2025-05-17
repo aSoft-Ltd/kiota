@@ -1,22 +1,22 @@
 package kiota
 
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kiota.file.PickerLimit
 import kiota.file.mime.All
 import kiota.file.mime.Mime
-import kiota.file.toResponse
-import kiota.internal.FileInfoImpl
+import kiota.file.toResult
 import kiota.internal.FileImpl
+import kiota.internal.FileInfoImpl
 import kiota.internal.MimeFileFilter
+import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.swing.JFileChooser
 import javax.swing.SwingUtilities
 import kotlin.coroutines.resume
 
-abstract class AbstractFilePicker {
+abstract class AbstractPicker {
     protected suspend fun show(
-        mimes: List<Mime>,
+        mimes: Collection<Mime>,
         limit: PickerLimit
-    ): MultiPickerResponse {
+    ): MultiPickerResult {
         if (mimes.isEmpty()) return show(listOf(All), limit)
         if (limit.count <= 0) return Cancelled
         if (limit.size <= MemorySize.Zero) return Cancelled
@@ -39,6 +39,6 @@ abstract class AbstractFilePicker {
             }
         }.mapNotNull { it.path }.toSet().map { FileImpl(it) }
         val infos = files.map { FileInfoImpl(it) }
-        return files.toResponse(mimes, limit, infos)
+        return files.toResult(mimes, limit, infos)
     }
 }

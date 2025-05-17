@@ -25,4 +25,4 @@ package kiota
  * ## Everywhere else
  * A local file is an instance of a path to a file on disk
  */
-interface File : SingleFileResponse
+interface File : SingleFileResponse, SinglePickerResult

@@ -5,21 +5,20 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import kiota.file.PickerLimit
+import kiota.file.mime.Image
+import kiota.file.mime.MediaMime
+import kiota.file.mime.Video
+import kiota.file.toResult
+import kiota.internal.File
+import kiota.internal.FileInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
-import kiota.file.MultiMediaPicker
-import kiota.file.PickerLimit
-import kiota.file.mime.Image
-import kiota.file.mime.MediaMime
-import kiota.file.mime.Video
-import kiota.file.toResponse
-import kiota.internal.FileInfo
-import kiota.internal.File
 
-class AndroidMultiMediaPicker(private val activity: ComponentActivity) : MultiMediaPicker {
+internal class AndroidMultiMediaPicker(private val activity: ComponentActivity) {
     private var scope: CoroutineScope? = null
     private var launcher: ActivityResultLauncher<PickVisualMediaRequest>? = null
     private val results by lazy { Channel<List<Uri>>() }
@@ -32,10 +31,10 @@ class AndroidMultiMediaPicker(private val activity: ComponentActivity) : MultiMe
         }
     }
 
-    override suspend fun open(
-        mimes: List<MediaMime>,
+    suspend fun open(
+        mimes: Collection<MediaMime>,
         limit: PickerLimit,
-    ): MultiPickerResponse {
+    ): MultiPickerResult {
         if (mimes.isEmpty()) return open(listOf(Image, Video), limit)
         val l = launcher ?: throw IllegalStateException("AndroidFileChooser has not been registered")
         val request = PickVisualMediaRequest.Builder()
@@ -43,9 +42,9 @@ class AndroidMultiMediaPicker(private val activity: ComponentActivity) : MultiMe
             .setMaxItems(limit.count)
             .build()
         l.launch(request)
-        val files = results.receive().map { File(it) }
+        val files = results.receive().map { File(it, FileScope.public) }  // TODO: scope, check to see if this file is actually public
         val infos = files.map { FileInfo(activity, it) }
-        return files.toResponse(mimes, limit, infos)
+        return files.toResult(mimes, limit, infos)
     }
 
     fun unregister() {

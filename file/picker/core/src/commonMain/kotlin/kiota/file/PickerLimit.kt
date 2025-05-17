@@ -4,6 +4,9 @@ import kiota.GB
 import kiota.MemorySize
 
 data class PickerLimit(
+    /**
+     * Size limit per file
+     */
     val size: MemorySize = 2.GB,
     val count: Int = Int.MAX_VALUE
 ) {

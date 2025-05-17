@@ -1,18 +1,13 @@
 package kiota.sample
 
+import androidx.compose.ui.interop.LocalUIViewController
 import androidx.compose.ui.window.ComposeUIViewController
-import platform.UIKit.UIViewController
 import kiota.IosFileManager
 import kiota.Sample
+import platform.UIKit.UIViewController
 
 class SampleBridge {
-    private var controller: UIViewController? = null
-    val files = IosFileManager()
-
     fun make(): UIViewController = ComposeUIViewController {
-        Sample(files = files)
-    }.also {
-        controller = it
-        files.initialize(it)
+        Sample(files = IosFileManager(LocalUIViewController.current))
     }
 }

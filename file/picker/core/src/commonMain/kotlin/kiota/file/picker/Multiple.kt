@@ -1,3 +1,13 @@
 package kiota.file.picker
 
-data object Single
+interface Multiple {
+    val max: Int
+
+    companion object : Multiple {
+        override val max: Int = Int.MAX_VALUE
+
+        operator fun invoke(max: Int): Multiple = object : Multiple {
+            override val max: Int = max
+        }
+    }
+}

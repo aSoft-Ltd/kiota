@@ -21,10 +21,10 @@ internal fun FileReader(files: FileManager) {
             Button(
                 onClick = {
                     scope.launch {
-                        when (val file = files.pickers.document.open()) {
+                        when (val file = files.picker().open()) {
                             is Cancelled -> {}
                             is Denied -> {}
-                            is Failure -> {}
+                            is PickerFailure -> {}
                             is File -> {
                                 text = files.readText(file)
                             }

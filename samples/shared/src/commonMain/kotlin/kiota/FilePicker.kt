@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
 import kiota.file.PickerLimit
 import kiota.file.mime.Mime
-import kiota.file.response.ResponseError
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.round
@@ -30,16 +29,16 @@ internal fun FilesPicker(
     Column {
         val picked = remember { mutableStateListOf<File>() }
         val denied = remember { mutableStateOf(false) }
-        val errors = remember { mutableStateListOf<ResponseError>() }
+        val errors = remember { mutableStateListOf<PickerFailure>() }
         Row {
             Button(
                 onClick = {
                     scope.launch {
-                        when (val response = files.pickers.documents.open(limit = PickerLimit(size = 10.MB, count = 2))) {
-                            is Cancelled -> {}
-                            is Denied -> denied.value = true
-                            is Failure -> errors += response
-                            is Files -> picked += response
+                        when (val result = files.picker(limit = PickerLimit(size = 10.MB, count = 2)).open()) {
+                            Cancelled -> {}
+                            Denied -> denied.value = true
+                            is PickerFailure -> errors += result.all()
+                            is Files -> picked += result
                         }
                     }
                 }
@@ -50,11 +49,11 @@ internal fun FilesPicker(
             Button(
                 onClick = {
                     scope.launch {
-                        when (val response = files.pickers.document.open()) {
+                        when (val result = files.picker().open()) {
                             is Cancelled -> {}
                             is Denied -> denied.value = true
-                            is Failure -> errors += response.errors
-                            is File -> picked += response
+                            is PickerFailure -> errors += result
+                            is File -> picked += result
                         }
                     }
                 }
@@ -132,7 +131,7 @@ internal fun PickedFile(
             }) { Text("Open") }
 
             Button(onClick = {
-                scope.launch { files.saveAs(file.file) }
+                scope.launch { files.export(file.file) }
             }) { Text("Save As") }
         }
         Text(message ?: "")

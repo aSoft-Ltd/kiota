@@ -6,5 +6,5 @@ import kiota.IosFileManager
 import kiota.Sample
 
 fun Main(host: UIViewController) = ComposeUIViewController {
-    Sample(files = IosFileManager()) //
+    Sample(files = IosFileManager(host)) //
 }

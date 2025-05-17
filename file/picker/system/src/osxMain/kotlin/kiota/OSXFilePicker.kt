@@ -1,5 +1,11 @@
 package kiota
 
+import kiota.file.PickerLimit
+import kiota.file.mime.All
+import kiota.file.mime.Mime
+import kiota.file.toResult
+import kiota.internal.FileInfoPath
+import kiota.internal.FileUrl
 import kotlinx.coroutines.channels.Channel
 import platform.Foundation.NSURL
 import platform.UIKit.UIDocumentPickerDelegateProtocol
@@ -8,21 +14,10 @@ import platform.UIKit.UIViewController
 import platform.UniformTypeIdentifiers.UTType
 import platform.UniformTypeIdentifiers.UTTypeItem
 import platform.darwin.NSObject
-import kiota.file.PickerLimit
-import kiota.file.mime.All
-import kiota.file.mime.Mime
-import kiota.file.toResponse
-import kiota.internal.FileInfoPath
-import kiota.internal.FileUrl
 
-abstract class OSXFilePicker {
+internal class OSXFilePicker(private val host: UIViewController) {
 
-    private var host: UIViewController? = null
     private val results = Channel<List<NSURL>>()
-
-    fun initialize(host: UIViewController) {
-        this.host = host
-    }
 
     private val delegate = object : NSObject(), UIDocumentPickerDelegateProtocol {
         override fun documentPicker(
@@ -39,7 +34,7 @@ abstract class OSXFilePicker {
         }
     }
 
-    protected suspend fun show(mimes: List<Mime>, limit: PickerLimit): MultiPickerResponse {
+    suspend fun show(mimes: List<Mime>, limit: PickerLimit): MultiPickerResult {
         val types = when {
             mimes.isEmpty() -> listOf(UTTypeItem)
             mimes.contains(All) -> listOf(UTTypeItem)
@@ -50,12 +45,10 @@ abstract class OSXFilePicker {
 
         picker.allowsMultipleSelection = limit.count > 1
         picker.delegate = delegate
-        host?.presentViewController(picker, animated = true, null) ?: throw IllegalStateException(
-            "OSXFilePicker has not been initialized with a non null host view controller"
-        )
+        host.presentViewController(picker, animated = true, null)
 
         val files = results.receive().map { FileUrl(it) }
         picker.dismissViewControllerAnimated(true, null)
-        return files.toResponse(mimes, limit, files.map { FileInfoPath(it) })
+        return files.toResult(mimes, limit, files.map { FileInfoPath(it) })
     }
 }

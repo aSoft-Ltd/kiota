@@ -3,6 +3,7 @@ package kiota.internal
 import android.content.Context
 import android.provider.OpenableColumns
 import kiota.FileInfo
+import kiota.FileScope
 import kiota.MemorySize
 import kiota.MemoryUnit
 import kiota.Multiplier
@@ -50,4 +51,6 @@ class FileInfoUri(
             multiplier = Multiplier.Unit
         )
     }
+
+    override fun scope(): FileScope = file.scope
 }

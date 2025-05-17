@@ -21,5 +21,5 @@ rootProject.name = "kiota"
 includeSubs("kiota", ".", "url", "sse", "files")
 includeSubs("kiota-file", "file", "core", "system", "test", "compose")
 includeSubs("kiota-file-picker", "file/picker", "core", "system", "test")
-includeSubs("kiota-file-manager", "file/manager", "core", "system", "test")
+includeSubs("kiota-file-manager", "file/manager", "core", "system", "virtual")
 includeSubs("kiota-samples", "samples", "shared", "desktop", "browser", "android")

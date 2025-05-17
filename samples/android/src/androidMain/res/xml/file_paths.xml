@@ -2,4 +2,5 @@
 <paths>
     <files-path name="tmp" path="./tmp" />
     <files-path name="public" path="./public" />
+    <files-path name="shared" path="./shared" />
 </paths>

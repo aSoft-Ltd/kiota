@@ -7,7 +7,7 @@ import java.io.File
 import javax.swing.filechooser.FileFilter
 
 internal class MimeFileFilter(
-    private val mimes: List<Mime>,
+    private val mimes: Collection<Mime>,
     private val limit: MemorySize,
 ) : FileFilter() {
     override fun accept(file: File): Boolean {

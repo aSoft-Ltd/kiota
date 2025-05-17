@@ -2,6 +2,11 @@
 
 package kiota.internal
 
+import kiota.FileInfo
+import kiota.FileScope
+import kiota.MemorySize
+import kiota.MemoryUnit
+import kiota.Multiplier
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.ObjCObjectVar
@@ -11,10 +16,6 @@ import kotlinx.cinterop.ptr
 import kotlinx.cinterop.value
 import platform.Foundation.NSNumber
 import platform.Foundation.NSURLFileSizeKey
-import kiota.FileInfo
-import kiota.MemorySize
-import kiota.MemoryUnit
-import kiota.Multiplier
 
 class FileInfoPath(override val file: FileUrl) : FileInfo {
     override fun name(extension: Boolean): String {
@@ -39,4 +40,6 @@ class FileInfoPath(override val file: FileUrl) : FileInfo {
             multiplier = Multiplier.Unit
         )
     }
+
+    override fun scope(): FileScope = FileScope.private
 }

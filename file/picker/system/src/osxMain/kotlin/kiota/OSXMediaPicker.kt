@@ -1,5 +1,14 @@
 package kiota
 
+import kiota.file.PickerLimit
+import kiota.file.mime.All
+import kiota.file.mime.Image
+import kiota.file.mime.MediaMime
+import kiota.file.mime.Mime
+import kiota.file.mime.Video
+import kiota.file.toResult
+import kiota.internal.FileInfoProvider
+import kiota.internal.FileProvider
 import kotlinx.coroutines.channels.Channel
 import platform.Foundation.NSItemProvider
 import platform.PhotosUI.PHPickerConfiguration
@@ -9,27 +18,12 @@ import platform.PhotosUI.PHPickerViewController
 import platform.PhotosUI.PHPickerViewControllerDelegateProtocol
 import platform.UIKit.UIViewController
 import platform.darwin.NSObject
-import kiota.file.PickerLimit
-import kiota.file.mime.All
-import kiota.file.mime.Image
-import kiota.file.mime.MediaMime
-import kiota.file.mime.Mime
-import kiota.file.mime.Video
-import kiota.file.toResponse
-import kiota.internal.FileInfoProvider
-import kiota.internal.FileProvider
 
-abstract class OSXMediaPicker {
+internal class OSXMediaPicker(private val host: UIViewController) {
 
     private val permission by lazy { OSXMediaPickerPermissionManager() }
 
-    private var host: UIViewController? = null
-
     private val results = Channel<List<NSItemProvider>>()
-
-    fun initialize(host: UIViewController?) {
-        this.host = host
-    }
 
     private val delegate = object : NSObject(), PHPickerViewControllerDelegateProtocol {
         override fun picker(picker: PHPickerViewController, didFinishPicking: List<*>) {
@@ -56,7 +50,7 @@ abstract class OSXMediaPicker {
         else -> emptyList()
     }
 
-    private fun List<Mime>.toFilter(): PHPickerFilter {
+    private fun Collection<Mime>.toFilter(): PHPickerFilter {
         val filters = if (isEmpty() || contains(All)) {
             Image.toFilters() + Video.toFilters()
         } else buildSet {
@@ -67,7 +61,7 @@ abstract class OSXMediaPicker {
         return PHPickerFilter.anyFilterMatchingSubfilters(filters.toList())
     }
 
-    private suspend fun launch(mimes: List<Mime>, limit: PickerLimit): MultiPickerResponse {
+    private suspend fun launch(mimes: Collection<Mime>, limit: PickerLimit): MultiPickerResult {
         val config = PHPickerConfiguration()
         config.filter = mimes.toFilter()
         config.selectionLimit = limit.count.toLong()
@@ -75,9 +69,7 @@ abstract class OSXMediaPicker {
         val chooser = PHPickerViewController(configuration = config)
         chooser.delegate = delegate
 
-        host?.presentViewController(chooser, animated = true, completion = null) ?: throw IllegalStateException(
-            "OSXMultiMediaPicker has not been initialized with a non null host view controller"
-        )
+        host.presentViewController(chooser, animated = true, completion = null)
 
         val providers = results.receive()
 
@@ -86,10 +78,10 @@ abstract class OSXMediaPicker {
         val files = providers.map { FileProvider(it) }
         val infos = files.map { FileInfoProvider(it) }
 
-        return files.toResponse(mimes, limit, infos)
+        return files.toResult(mimes, limit, infos)
     }
 
-    protected suspend fun show(mimes: List<MediaMime>, limit: PickerLimit): MultiPickerResponse {
+    suspend fun show(mimes: Collection<MediaMime>, limit: PickerLimit): MultiPickerResult {
         if (permission.check(mimes) == Permission.Granted) return launch(mimes, limit)
         return when (permission.request(mimes)) {
             Permission.Granted -> launch(mimes, limit)

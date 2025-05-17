@@ -1,6 +1,6 @@
 package kiota
 
-import kiota.file.FilePickers
+import kiota.file.FilePickerFactory
 import kiota.internal.TestFile
 import kiota.internal.TestFileInfo
 
@@ -11,15 +11,8 @@ class VirtualFileManager(
     FileDeleter,
     FileCreator by VirtualFileCreator(files),
     FileOpener by VirtualFileOpener(files),
-    FileReader by VirtualFileReader() {
-    override val pickers: FilePickers<*, *, *, *> by lazy {
-        FilePickers(
-            documents = VirtualMultiFilePicker(files),
-            document = VirtualSingleFilePicker(files),
-            medias = VirtualMultiMediaPicker(files),
-            media = VirtualSingleMediaPicker(files),
-        )
-    }
+    FileReader by VirtualFileReader(),
+    FilePickerFactory by VirtualFilePickerFactory(files) {
 
     override fun exists(file: File): Boolean = files.containsValue(file)
 
@@ -29,6 +22,9 @@ class VirtualFileManager(
     }
 
     override suspend fun export(file: File): SingleFileResponse = file
+    override suspend fun share(file: File): SingleFileResponse = file
+
+    override fun canShare(): Boolean = false
 
     override fun delete(file: File): Boolean {
         if (!files.containsValue(file)) return false

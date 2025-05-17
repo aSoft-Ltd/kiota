@@ -1,5 +1,6 @@
 package kiota
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -75,24 +76,35 @@ internal fun FileSaver(files: FileManager) {
     if (s != null) Dialog(
         onDismissRequest = { saved = null }
     ) {
-        Row {
-            Text("File has been saved")
-            Button(onClick = {
-                scope.launch {
-                    saved = null
-                    files.open(s)
+        Column {
+            Text("${files.info(s).name()} has been saved")
+            Row {
+                Button(onClick = {
+                    scope.launch {
+                        saved = null
+                        files.open(s)
+                    }
+                }) {
+                    Text("Open")
                 }
-            }) {
-                Text("Open File")
-            }
 
-            Button(onClick = {
-                scope.launch {
-                    saved = null
-                    files.saveAs(s)
+                Button(onClick = {
+                    scope.launch {
+                        saved = null
+                        files.export(s)
+                    }
+                }) {
+                    Text("Save")
                 }
-            }) {
-                Text("Save File")
+
+                if (files.canShare()) Button(onClick = {
+                    scope.launch {
+                        saved = null
+                        files.share(s)
+                    }
+                }) {
+                    Text("Share")
+                }
             }
         }
     }

@@ -4,6 +4,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import platform.UniformTypeIdentifiers.UTType
 import platform.UniformTypeIdentifiers.loadDataRepresentationForContentType
 import kiota.FileInfo
+import kiota.FileScope
 import kiota.MemorySize
 import kiota.MemoryUnit
 import kiota.Multiplier
@@ -46,4 +47,6 @@ class FileInfoProvider(override val file: FileProvider) : FileInfo {
             }
         }
     }
+
+    override fun scope(): FileScope = FileScope.private
 }

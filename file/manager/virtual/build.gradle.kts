@@ -25,12 +25,6 @@ kotlin {
                 api(projects.kiotaFilePickerTest)
             }
         }
-
-        val commonTest by getting {
-            dependencies {
-                implementation(libs.kommander.coroutines)
-            }
-        }
     }
 }
 

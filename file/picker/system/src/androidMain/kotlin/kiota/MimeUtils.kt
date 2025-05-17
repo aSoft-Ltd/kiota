@@ -50,7 +50,7 @@ fun Mime.toReadPermission(): String? = when (this) {
     }
 }
 
-fun List<Mime>.toMediaType(): VisualMediaType {
+fun Collection<Mime>.toMediaType(): VisualMediaType {
     val images = count { it is Image || it is All }
     val videos = count { it is Video || it is All }
     return when {

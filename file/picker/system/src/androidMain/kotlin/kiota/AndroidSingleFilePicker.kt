@@ -4,21 +4,20 @@ import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import kiota.file.PickerLimit
+import kiota.file.mime.All
+import kiota.file.mime.Mime
+import kiota.file.response.toSingle
+import kiota.file.toResult
+import kiota.internal.FileInfoUri
+import kiota.internal.FileUri
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
-import kiota.file.PickerLimit
-import kiota.file.SingleFilePicker
-import kiota.file.mime.All
-import kiota.file.mime.Mime
-import kiota.file.response.toSingle
-import kiota.file.toResponse
-import kiota.internal.FileInfoUri
-import kiota.internal.FileUri
 
-class AndroidSingleFilePicker(private val activity: ComponentActivity) : SingleFilePicker {
+internal class AndroidSingleFilePicker(private val activity: ComponentActivity) {
     private var scope: CoroutineScope? = null
     private var launcher: ActivityResultLauncher<Array<String>>? = null
     private val results by lazy { Channel<Uri?>() }
@@ -31,16 +30,17 @@ class AndroidSingleFilePicker(private val activity: ComponentActivity) : SingleF
         }
     }
 
-    override suspend fun open(
-        mimes: List<Mime>,
+    suspend fun open(
+        mimes: Collection<Mime>,
         limit: MemorySize,
-    ): SingleFileResponse {
+    ): SinglePickerResult {
         if (mimes.isEmpty()) return open(listOf(All), limit)
         val l = launcher ?: throw IllegalStateException("AndroidFileChooser has not been registered")
         l.launch(mimes.map { it.text }.toTypedArray())
-        val files = listOf(results.receive()?.let { FileUri(it) } ?: return Cancelled)
+        val uri = results.receive() ?: return Cancelled
+        val files = listOf(FileUri(uri, FileScope.public))   // TODO: scope, check to see if this file is actually public
         val infos = files.map { FileInfoUri(activity, it) }
-        return files.toResponse(mimes, PickerLimit(limit, 1), infos).toSingle()
+        return files.toResult(mimes, PickerLimit(limit, 1), infos).toSingle()
     }
 
     fun unregister() {

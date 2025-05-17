@@ -30,4 +30,10 @@ interface FileInfo {
      * @return the [Mime] type of the file
      */
     fun mime(): Mime = Mime.from(extension())
+
+    /**
+     * Know if the file is from a public scope, or a private scope
+     * @return the [FileScope]
+     */
+    fun scope() : FileScope
 }
