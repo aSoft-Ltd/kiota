@@ -21,8 +21,8 @@ class VirtualFileManager(
         else -> throw IllegalArgumentException("Unsupported file type")
     }
 
-    override suspend fun export(file: File): SingleFileResponse = file
-    override suspend fun share(file: File): SingleFileResponse = file
+    override suspend fun export(file: File) = file
+    override suspend fun share(file: File) = file
 
     override fun canShare(): Boolean = false
 

@@ -1,13 +1,12 @@
 package kiota.internal
 
+import kiota.File
 import kiota.FileCreator
-import kiota.FileScope
-import kiota.SingleFileResponse
 import kiota.file.mime.Mime
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.set
-import org.w3c.files.File
 import org.w3c.files.FilePropertyBag
+import org.w3c.files.File as BFile
 
 internal class BrowserFileCreator : FileCreator {
     override suspend fun create(content: ByteArray, name: String, type: Mime) = save(
@@ -30,8 +29,8 @@ internal class BrowserFileCreator : FileCreator {
         type = type
     )
 
-    private fun save(content: Any?, name: String, type: Mime): SingleFileResponse {
-        val file = File(arrayOf(content), fileName = name, options = FilePropertyBag(type = type.text))
-        return FileImpl(file, FileScope.private)
+    private fun save(content: Any?, name: String, type: Mime): File {
+        val file = BFile(arrayOf(content), fileName = name, options = FilePropertyBag(type = type.text))
+        return FileImpl(file)
     }
 }

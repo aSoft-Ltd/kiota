@@ -1,7 +1,6 @@
 package kiota.internal
 
 import kiota.FileInfo
-import kiota.FileScope
 import kiota.MemorySize
 import kiota.MemoryUnit
 import kiota.Multiplier
@@ -24,6 +23,4 @@ class BrowserFileInfo(override val file: FileImpl) : FileInfo {
         multiplier = Multiplier.Unit,
         unit = MemoryUnit.Bytes
     )
-
-    override fun scope(): FileScope = file.scope
 }
