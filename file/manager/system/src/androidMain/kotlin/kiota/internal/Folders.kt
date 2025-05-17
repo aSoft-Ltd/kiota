@@ -2,6 +2,7 @@ package kiota.internal
 
 class Folders(
     val tmp: String = "tmp",
-    val pub: String = "pub",
+    val public: String = "public",
+    val shared: String = "shared",
     val data: String = "data"
 )

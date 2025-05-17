@@ -3,7 +3,6 @@ package kiota.internal
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.webkit.MimeTypeMap
 import androidx.core.content.FileProvider
 import kiota.Failure
 import kiota.File
@@ -11,7 +10,6 @@ import kiota.FileOpener
 import kiota.FileScope
 import kiota.SingleFileResponse
 import kiota.file.response.ResponseError
-import java.io.File as JFile
 
 /**
  * Requires to have a FileProvider defined in AndroidManifest.xml
@@ -32,22 +30,23 @@ import java.io.File as JFile
  * xml/file_paths.xml with contents
  * <paths>
  *     <files-path name="tmp" path="./tmp" />
+ *     <files-path name="shared" path="./shared" />
  * </paths>
  */
-class AndroidFileOpener(private val context: Context) : FileOpener {
+class AndroidFileOpener(
+    private val context: Context,
+    private val authority: String = "${context.applicationContext.packageName}.fileprovider"
+) : FileOpener {
 
     private fun openPrivate(file: java.io.File, mimeType: String?): SingleFileResponse {
-        val authority = "${context.applicationContext.packageName}.fileprovider"
         val uri = FileProvider.getUriForFile(context, authority, file)
         return open(uri, mimeType)
     }
 
     private fun openPublic(file: File, mimeType: String?): SingleFileResponse {
-        val uri = when (file) {
-            is FilePath -> Uri.fromFile(JFile(file.path))
-            is FileUri -> file.uri
-            else -> return Failure(errors = listOf(ResponseError.UnknownFileType(file)))
-        }
+        val uri = file.toUri() ?: return Failure(
+            errors = listOf(ResponseError.UnknownFileType(file))
+        )
         return open(uri, mimeType)
     }
 
@@ -60,9 +59,7 @@ class AndroidFileOpener(private val context: Context) : FileOpener {
     }
 
     override suspend fun open(file: File): SingleFileResponse {
-        val info = FileInfo(context, file)
-        val myMime = MimeTypeMap.getSingleton()
-        val mimeType = myMime.getMimeTypeFromExtension(info.extension())
+        val mimeType = file.mimeType(context)
         return when (file) {
             is FilePath -> openPrivate(java.io.File(file.path), mimeType)
             else -> openPublic(file, mimeType)

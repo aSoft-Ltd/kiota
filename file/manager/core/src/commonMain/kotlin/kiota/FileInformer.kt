@@ -13,4 +13,9 @@ interface FileInformer {
      * Return general information about the file
      */
     fun info(file: File): FileInfo
+
+    /**
+     * Checks whether files can be shared or not
+     */
+    fun canShare() : Boolean
 }

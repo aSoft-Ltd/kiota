@@ -24,4 +24,6 @@ class BrowserFileManager :
         is FileImpl -> BrowserFileInfo(file)
         else -> throw IllegalArgumentException("Unsupported file type: $file")
     }
+
+    override fun canShare(): Boolean = false
 }

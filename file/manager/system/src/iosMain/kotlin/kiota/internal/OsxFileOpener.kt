@@ -13,18 +13,9 @@ import kiota.SingleFileResponse
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-class OsxFileOpener : FileOpener {
-
-    private var host: UIViewController? = null
-
-    fun initialize(host: UIViewController) {
-        this.host = host
-    }
-
+internal class OsxFileOpener(private val host: UIViewController) : FileOpener {
     private val delegate = object : NSObject(), UIDocumentInteractionControllerDelegateProtocol {
-        override fun documentInteractionControllerViewControllerForPreview(controller: UIDocumentInteractionController): UIViewController {
-            return host ?: throw IllegalStateException("No presenting view controller")
-        }
+        override fun documentInteractionControllerViewControllerForPreview(controller: UIDocumentInteractionController) = host
     }
 
     private fun open(url: NSURL): SingleFileResponse {

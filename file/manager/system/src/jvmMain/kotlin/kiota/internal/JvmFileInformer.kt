@@ -12,4 +12,6 @@ class JvmFileInformer : FileInformer {
         is FileImpl -> FileInfoImpl(file)
         else -> throw IllegalArgumentException("Unknown file type: $file")
     }
+
+    override fun canShare(): Boolean = false
 }

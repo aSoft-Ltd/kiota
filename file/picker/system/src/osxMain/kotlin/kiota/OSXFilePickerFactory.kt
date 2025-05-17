@@ -1,0 +1,4 @@
+package kiota
+
+class OSXFilePickerFactory {
+}

@@ -1,18 +1,19 @@
 package kiota
 
 import androidx.activity.ComponentActivity
-import kiota.file.FilePickers
+import kiota.file.PickerLimit
+import kiota.file.mime.MediaMime
 import kiota.file.mime.Mime
 import kiota.internal.AndroidFileCreator
 import kiota.internal.AndroidFileDeleter
+import kiota.internal.AndroidFileExposer
 import kiota.internal.AndroidFileOpener
 import kiota.internal.AndroidFileReader
-import kiota.internal.AndroidFileExposer
 import kiota.internal.FileInfo
 import kiota.internal.FilePath
 import kiota.internal.FileUri
 import kiota.internal.Folders
-import java.io.File
+import java.io.File as JFile
 
 /**
  * Requires to have a FileProvider defined in AndroidManifest.xml
@@ -37,36 +38,27 @@ import java.io.File
  */
 class AndroidFileManager(
     val activity: ComponentActivity,
-    val folders: Folders = Folders()
+    private val authority: String = "${activity.applicationContext.packageName}.fileprovider",
+    private val folders: Folders = Folders()
 ) :
     FileManager,
     FileCreator,
     FileDeleter by AndroidFileDeleter(),
     FileReader by AndroidFileReader(activity),
-    FileOpener by AndroidFileOpener(activity) {
-    override val pickers by lazy {
-        FilePickers(
-            documents = AndroidMultiFilePicker(activity),
-            document = AndroidSingleFilePicker(activity),
-            medias = AndroidMultiMediaPicker(activity),
-            media = AndroidSingleMediaPicker(activity),
-        )
-    }
+    FileOpener by AndroidFileOpener(activity, authority) {
+    private val factory by lazy { AndroidFilePickerFactory(activity) }
 
     private val creator by lazy { AndroidFileCreator(activity) }
 
-    private val saver by lazy { AndroidFileExposer(activity, this) }
+    private val saver by lazy { AndroidFileExposer(activity, this, folders, authority) }
 
     fun register() {
-        pickers.documents.register()
-        pickers.document.register()
-        pickers.medias.register()
-        pickers.media.register()
+        factory.register()
         saver.register()
     }
 
-    override fun exists(file: kiota.File): Boolean = when (file) {
-        is FilePath -> File(file.path).exists()
+    override fun exists(file: File): Boolean = when (file) {
+        is FilePath -> JFile(file.path).exists()
         is FileUri -> when (file.uri.scheme) {
             "content" -> {
                 val cursor = activity.contentResolver.query(file.uri, null, null, null, null)
@@ -75,24 +67,28 @@ class AndroidFileManager(
                 res
             }
 
-            "file" -> File(file.uri.path ?: "").exists()
+            "file" -> JFile(file.uri.path ?: "").exists()
             else -> false
         }
 
         else -> false
     }
 
-    override fun info(file: kiota.File): FileInfo = FileInfo(activity, file)
+    override fun info(file: File): FileInfo = FileInfo(activity, file)
+    override fun canShare(): Boolean = true
 
     override suspend fun create(content: ByteArray, name: String, type: Mime) = creator.create(content, name, type)
     override suspend fun create(content: String, name: String, type: Mime) = creator.create(content, name, type)
-    override suspend fun export(file: kiota.File): SingleFileResponse = saver.export(file)
+    override suspend fun export(file: File): SingleFileResponse = saver.export(file)
+    override suspend fun share(file: File): SingleFileResponse = saver.share(file)
+
+    override fun picker(mimes: Collection<MediaMime>, limit: MemorySize) = factory.picker(mimes, limit)
+    override fun picker(mimes: Collection<MediaMime>, limit: PickerLimit) = factory.picker(mimes, limit)
+    override fun picker(mimes: Iterable<Mime>, limit: MemorySize) = factory.picker(mimes, limit)
+    override fun picker(mimes: Iterable<Mime>, limit: PickerLimit) = factory.picker(mimes, limit)
 
     fun unregister() {
-        pickers.documents.unregister()
-        pickers.document.unregister()
-        pickers.medias.unregister()
-        pickers.media.unregister()
+        factory.unregister()
         saver.unregister()
     }
 }

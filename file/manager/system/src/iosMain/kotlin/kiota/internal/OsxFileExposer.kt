@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalEncodingApi::class)
+@file:OptIn(ExperimentalForeignApi::class)
 
 package kiota.internal
 
@@ -7,22 +7,24 @@ import kiota.Denied
 import kiota.File
 import kiota.FileExposer
 import kiota.SingleFileResponse
+import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.useContents
 import kotlinx.coroutines.channels.Channel
+import platform.CoreGraphics.CGRectMake
 import platform.Foundation.NSURL
+import platform.UIKit.UIActivityViewController
+import platform.UIKit.UIDevice
 import platform.UIKit.UIDocumentPickerDelegateProtocol
 import platform.UIKit.UIDocumentPickerViewController
+import platform.UIKit.UIUserInterfaceIdiomPad
 import platform.UIKit.UIViewController
+import platform.UIKit.popoverPresentationController
 import platform.darwin.NSObject
-import kotlin.io.encoding.ExperimentalEncodingApi
 
-class OsxFileExposer : FileExposer {
+internal class OsxFileExposer(private val host: UIViewController) : FileExposer {
 
-    private var host: UIViewController? = null
     private val results = Channel<NSURL?>()
 
-    fun initialize(host: UIViewController) {
-        this.host = host
-    }
 
     private val delegate = object : NSObject(), UIDocumentPickerDelegateProtocol {
         override fun documentPicker(controller: UIDocumentPickerViewController, didPickDocumentAtURL: NSURL) {
@@ -45,11 +47,26 @@ class OsxFileExposer : FileExposer {
         picker.allowsMultipleSelection = false
         picker.delegate = delegate
 
-        host?.presentViewController(picker, animated = true, null) ?: throw IllegalStateException(
-            "OSXFileSaver has not been initialized with a non null host view controller"
-        )
+        host.presentViewController(picker, animated = true, null)
+
         val url = results.receive() ?: return Cancelled
         picker.dismissViewControllerAnimated(true, null)
         return FileUrl(url)
+    }
+
+    override suspend fun share(file: File): SingleFileResponse {
+        if (file !is FileUrl) return Cancelled
+        val url = file.url
+        val activity = UIActivityViewController(activityItems = listOf(url), applicationActivities = null)
+
+        if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+            activity.popoverPresentationController?.sourceView = host.view
+            host.view.bounds.useContents {
+                activity.popoverPresentationController?.sourceRect = CGRectMake(origin.x, origin.y, 0.0, 0.0)
+            }
+            activity.popoverPresentationController?.permittedArrowDirections = 0uL
+        }
+        host.presentViewController(activity, animated = true, completion = null)
+        return file // TODO: Handle file sharing results
     }
 }
