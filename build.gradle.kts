@@ -24,13 +24,14 @@ allprojects {
 }
 
 tasks.dokkaHtmlMultiModule {
-    moduleName.set("Captain")
+    moduleName.set("Kiota")
     outputDirectory.set(rootDir.resolve("docs"))
     moduleVersion.set(v)
     includes.from("ReadMe.md")
 }
 
 subprojects {
+    if(name.contains("sample")) return@subprojects
     apply(plugin = "org.jetbrains.dokka")
     apply(plugin = "com.vanniktech.maven.publish")
 
@@ -47,11 +48,11 @@ subprojects {
             name.set(p.name)
             description.set(p.description)
             inceptionYear.set("2019")
-            url.set("https://github.com/aSoft-Ltd/captain")
+            url.set("https://github.com/aSoft-Ltd/kiota")
             licenses {
                 license {
                     name.set("MIT License")
-                    url.set("https://github.com/aSoft-Ltd/captain/blob/master/LICENSE")
+                    url.set("https://github.com/aSoft-Ltd/kiota/blob/master/LICENSE")
                 }
             }
             developers {
@@ -62,9 +63,9 @@ subprojects {
                 }
             }
             scm {
-                url.set("https://github.com/aSoft-Ltd/captain/")
-                connection.set("scm:git:git://github.com/aSoft-Ltd/captain.git")
-                developerConnection.set("scm:git:ssh://git@github.com/aSoft-Ltd/captain.git")
+                url.set("https://github.com/aSoft-Ltd/kiota/")
+                connection.set("scm:git:git://github.com/aSoft-Ltd/kiota.git")
+                developerConnection.set("scm:git:ssh://git@github.com/aSoft-Ltd/kiota.git")
             }
         }
     }
