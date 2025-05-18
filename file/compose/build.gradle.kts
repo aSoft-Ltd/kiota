@@ -40,29 +40,11 @@ android {
 }
 
 kotlin {
-    androidTarget {
-        compilations.all {
-            compileTaskProvider {
-                compilerOptions.jvmTarget = JvmTarget.JVM_17
-            }
-        }
-    }
+    androidTarget { library() }
+    jvm { library() }
+    js { browser() }
 
-    jvm {
-        compilations.all {
-            compileTaskProvider {
-                compilerOptions.jvmTarget = JvmTarget.JVM_17
-            }
-        }
-    }
-
-    js {
-        browser()
-    }
-
-    wasmJs {
-        browser()
-    }
+    wasmJs { browser() }
 
     val ios = listOf(iosArm64(), iosX64(), iosSimulatorArm64())
 
