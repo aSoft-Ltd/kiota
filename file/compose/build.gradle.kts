@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask
 
@@ -12,30 +11,17 @@ plugins {
 
 description = "A compose way of reading local files and displaying them in compose ui"
 
-android {
-    namespace = "tz.co.asoft.kioa.file.compose"
-    compileSdk = androidx.versions.compile.sdk.get().toInt()
+configureAndroid("src/androidMain") {
+    namespace = "tz.co.asoft.kiota.file.compose"
+    compileSdkVersion(apiLevel = androidx.versions.compile.sdk.get().toInt())
     defaultConfig {
-        minSdk = 25 // because of the coil dependency has this as it's min sdk
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        minSdk = 8
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    buildFeatures {
-        compose = true
-    }
-
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-            excludes += "/META-INF/*.kotlin_module"
-            excludes += "/META-INF/LICENSE.md"
-            excludes += "/META-INF/LICENSE-notice.md"
-        }
+    lintOptions {
+        isWarningsAsErrors = false
+        isAbortOnError = false
+        isIgnoreTestSources = true
     }
 }
 
@@ -53,12 +39,15 @@ kotlin {
             dependencies {
                 api(compose.runtime)
                 api(compose.foundation)
-                api(projects.kiotaFileManagerSystem)
+                api(projects.kiotaFileManagerCore)
             }
         }
 
         val androidMain by getting {
             dependsOn(commonMain)
+            dependencies {
+                api(projects.kiotaFileManagerSystem)?.because("We need to add tooling on AndroidFileManager")
+            }
         }
 
         val skiaMain by creating {

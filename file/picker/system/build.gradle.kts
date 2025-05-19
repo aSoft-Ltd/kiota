@@ -10,7 +10,7 @@ plugins {
 description = "A kotlin multiplatform abstraction for choosing files on different file systems provided by their respective platforms"
 
 configureAndroid("src/androidMain") {
-    namespace = "tz.co.asoft.system.file.chooser"
+    namespace = "tz.co.asoft.kiota.file.picker.system"
     compileSdkVersion(apiLevel = androidx.versions.compile.sdk.get().toInt())
     defaultConfig {
         minSdk = 8
@@ -41,7 +41,7 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
-                api(androidx.activity.ktx)?.because("We need it to check permissions while picking files")
+                api(androidx.activity.ktx)?.because("We need it to check permissions while picking documents")
             }
         }
 

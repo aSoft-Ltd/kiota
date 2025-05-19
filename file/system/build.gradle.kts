@@ -10,7 +10,7 @@ plugins {
 description = "A kotlin multiplatform implementation of files on diffrent file systems"
 
 configureAndroid("src/androidMain") {
-    namespace = "tz.co.asoft.system.file.system"
+    namespace = "tz.co.asoft.kiota.file.system"
     compileSdkVersion(apiLevel = androidx.versions.compile.sdk.get().toInt())
     defaultConfig {
         minSdk = 8

@@ -10,7 +10,7 @@ plugins {
 description = "A kotlin multiplatform abstraction for managing files provided by systems on different platforms"
 
 configureAndroid("src/androidMain") {
-    namespace = "tz.co.asoft.system.file.manager"
+    namespace = "tz.co.asoft.kiota.file.manager.system"
     compileSdkVersion(apiLevel = androidx.versions.compile.sdk.get().toInt())
     defaultConfig {
         minSdk = 8
