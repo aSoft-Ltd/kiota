@@ -38,4 +38,15 @@ class UrlQueryParamsTest {
         val p by url.params.intOrNull()
         expect(p).toBe(null)
     }
+
+    @Test
+    fun should_be_able_to_encod_other_urls_as_query_parameters() {
+        val url = Url("/test/me?callback=https://example.com")
+        expect(url.params["callback"]).toBe("https://example.com")
+
+        val callback by url.params
+        expect(callback).toBe("https://example.com")
+
+        expect(url.path).toBe("/test/me")
+    }
 }

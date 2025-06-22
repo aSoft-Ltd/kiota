@@ -17,11 +17,11 @@ import kollections.joinToString
 import kollections.last
 import kollections.lastOrNull
 import kollections.minus
-import kollections.plus
-import kollections.toList
-import kollections.mutableSetOf
 import kollections.mutableListOf
+import kollections.mutableSetOf
+import kollections.plus
 import kollections.size
+import kollections.toList
 
 @PublishedApi
 internal class UrlImpl(
@@ -35,15 +35,16 @@ internal class UrlImpl(
         private val String.isDomainLike: Boolean
             get() = (contains(".") && !startsWith(".")) || (contains(":") && !startsWith(":"))
 
+        private fun scheme(value: String): String {
+            if (value.contains("?")) return scheme(value.substringBefore("?"))
+            if (value.contains("://")) value.substringBefore("://").lowercase()
+            return ""
+        }
+
         operator fun invoke(value: String): UrlImpl {
-            var protocol = value.split("://").getOrNull(0) ?: ""
-            val lessProtocol = if (protocol == value) {
-                protocol = ""
-                value
-            } else {
-                value.replace("$protocol://", "")
-            }
-            val split = lessProtocol.split("?")
+            val protocol = scheme(value)
+            val schemeless = value.replaceFirst(protocol, "")
+            val split = schemeless.split("?")
             val params = split.getOrNull(1)
             val segments = (split.getOrNull(0) ?: "").replace("//", "/").split("/").filter {
                 it.isNotBlank()
