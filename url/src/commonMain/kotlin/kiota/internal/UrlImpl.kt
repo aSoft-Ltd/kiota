@@ -37,13 +37,18 @@ internal class UrlImpl(
 
         private fun scheme(value: String): String {
             if (value.contains("?")) return scheme(value.substringBefore("?"))
-            if (value.contains("://")) value.substringBefore("://").lowercase()
+            if (value.contains("://")) return value.substringBefore("://").lowercase()
             return ""
+        }
+
+        private fun String.schemeless(scheme: String) : String {
+            if(scheme.isEmpty()) return this
+            return lowercase().substringAfter("$scheme://")
         }
 
         operator fun invoke(value: String): UrlImpl {
             val protocol = scheme(value)
-            val schemeless = value.replaceFirst(protocol, "")
+            val schemeless = value.schemeless(protocol)
             val split = schemeless.split("?")
             val params = split.getOrNull(1)
             val segments = (split.getOrNull(0) ?: "").replace("//", "/").split("/").filter {

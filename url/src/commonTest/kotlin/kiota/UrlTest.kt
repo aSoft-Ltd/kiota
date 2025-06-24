@@ -190,4 +190,10 @@ class UrlTest {
         val url = Url("http://github.com/andylamax")
         expect(url.root).toBe("http://github.com")
     }
+
+    @Test
+    fun should_be_able_to_get_the_proper_scheme_from_a_url() {
+        val url = Url("app://test.com/that/works")
+        expect(url.scheme).toBe("app")
+    }
 }
