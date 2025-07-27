@@ -1,6 +1,3 @@
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
-import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask
-
 plugins {
     id("com.android.library")
     kotlin("multiplatform")
@@ -29,7 +26,6 @@ kotlin {
     androidTarget { library() }
     jvm { library() }
     js { browser() }
-
     wasmJs { browser() }
 
     val ios = listOf(iosArm64(), iosX64(), iosSimulatorArm64())
@@ -81,13 +77,4 @@ kotlin {
 
 repositories {
     mavenCentral()
-}
-
-rootProject.the<NodeJsRootExtension>().apply {
-    version = npm.versions.node.version.get()
-    downloadBaseUrl = npm.versions.node.url.get()
-}
-
-rootProject.tasks.withType<KotlinNpmInstallTask>().configureEach {
-    args.add("--ignore-engines")
 }

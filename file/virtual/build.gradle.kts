@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask
-
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
@@ -19,19 +17,8 @@ kotlin {
     if (Targeting.MINGW) mingwTargets() else listOf()
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(projects.kiotaFileCore)
-            }
+        commonMain.dependencies {
+            api(projects.kiotaFileCore)
         }
     }
-}
-
-rootProject.tasks.withType<KotlinNpmInstallTask>().configureEach {
-    args.add("--ignore-engines")
-}
-
-tasks.named("wasmJsTestTestDevelopmentExecutableCompileSync").configure {
-    mustRunAfter(tasks.named("jsBrowserTest"))
-    mustRunAfter(tasks.named("jsNodeTest"))
 }

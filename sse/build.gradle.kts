@@ -20,11 +20,7 @@ kotlin {
 
     sourceSets {
 
-        val commonMain by getting {
-            dependencies {
-
-            }
-        }
+        val commonMain by getting
 
         jvmMain.dependencies {
             api(kotlinx.coroutines.core)

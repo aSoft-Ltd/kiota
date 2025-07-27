@@ -4,9 +4,8 @@ import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
-import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask
-
 plugins {
     id("com.android.library")
     kotlin("multiplatform")
@@ -133,13 +132,4 @@ compose {
     resources {
         packageOfResClass = "kiota.generated.resources"
     }
-}
-
-rootProject.the<NodeJsRootExtension>().apply {
-    version = npm.versions.node.version.get()
-    downloadBaseUrl = npm.versions.node.url.get()
-}
-
-rootProject.tasks.withType<KotlinNpmInstallTask>().configureEach {
-    args.add("--ignore-engines")
 }
