@@ -1,7 +1,6 @@
 package kiota
 
 import kollections.joinToString
-import kollections.listOf
 import kollections.size
 import kommander.expect
 import kotlin.test.Test
@@ -195,5 +194,23 @@ class UrlTest {
     fun should_be_able_to_get_the_proper_scheme_from_a_url() {
         val url = Url("app://test.com/that/works")
         expect(url.scheme).toBe("app")
+    }
+
+    @Test
+    fun should_be_able_to_detect_local_host_as_a_domain() {
+        val url = Url("http://localhost/users")
+        expect(url.domain).toBe("localhost")
+    }
+
+    @Test
+    fun should_be_able_to_detect_domain_and_port_when_localhost_is_involved() {
+        val url = Url("http://localhost:80/users")
+        expect(url.domain).toBe("localhost:80")
+    }
+
+    @Test
+    fun should_be_able_to_detect_ip_addresses_as_a_domain() {
+        val url = Url("http://192.168.0.1/users")
+        expect(url.domain).toBe("192.168.0.1")
     }
 }

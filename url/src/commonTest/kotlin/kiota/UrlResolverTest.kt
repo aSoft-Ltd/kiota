@@ -57,4 +57,28 @@ class UrlResolverTest {
         val url = Url("app://test1.com/that/works")
         expect(url.resolve("app://test2.com/this/should/work")).toBe(Url("app://test2.com/this/should/work"))
     }
+
+    @Test
+    fun should_resolve_child_url_without_query_parameters_by_default() {
+        val url = Url("google.com/meet/user?token=abc")
+        expect(url.resolve("admin")).toBe(Url("google.com/meet/user/admin"))
+    }
+
+    @Test
+    fun should_resolve_child_url_without_query_parameters_when_query_is_set_to_false() {
+        val url = Url("google.com/meet/user?token=abc")
+        expect(url.resolve("admin", query = false)).toBe(Url("google.com/meet/user/admin"))
+    }
+
+    @Test
+    fun should_resolve_child_url_with_query_parameters_when_query_is_set_to_true() {
+        val url = Url("google.com/meet/user?token=abc")
+        expect(url.resolve("admin", query = true)).toBe(Url("google.com/meet/user/admin?token=abc"))
+    }
+
+    @Test
+    fun should_resolve_sibling_url__query_parameters() {
+        val url = Url("google.com/meet/user?token=abc")
+        expect(url.resolve("../admin", query = false)).toBe(Url("google.com/meet/admin"))
+    }
 }

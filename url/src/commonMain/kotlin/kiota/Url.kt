@@ -3,10 +3,10 @@
 
 package kiota
 
-import kotlinx.JsExport
-import kotlin.js.JsName
 import kollections.List
+import kotlinx.JsExport
 import kotlinx.JsExportIgnore
+import kotlin.js.JsName
 
 /**
  * A representation of a Url
@@ -55,12 +55,12 @@ interface Url {
     /**
      * resolves the url with the same [root] but at the provided [path]
      */
-    fun at(path: String): Url
+    fun at(path: String, query: Boolean = false): Url
 
     /**
      * Appends adds a path segment to the current list of [segments]
      */
-    fun child(url: String): Url
+    fun child(url: String, query: Boolean = false): Url
 
     /**
      * Replaces the last path segment with the provided [url]
@@ -70,7 +70,7 @@ interface Url {
     /**
      * Resolves a path relative to this url
      */
-    fun resolve(path: String): Url
+    fun resolve(path: String, query: Boolean = false): Url
 
     @JsName("rebaseUrl")
             /**

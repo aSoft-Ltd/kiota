@@ -41,8 +41,8 @@ internal class UrlImpl(
             return ""
         }
 
-        private fun String.schemeless(scheme: String) : String {
-            if(scheme.isEmpty()) return this
+        private fun String.schemeless(scheme: String): String {
+            if (scheme.isEmpty()) return this
             return lowercase().substringAfter("$scheme://")
         }
 
@@ -55,7 +55,11 @@ internal class UrlImpl(
                 it.isNotBlank()
             }
             val first = segments.firstOrNull()
-            val domain = if (first?.isDomainLike == true) first else ""
+            val domain = when {
+                protocol.isNotEmpty() -> first ?: ""
+                first?.isDomainLike == true -> first
+                else -> ""
+            }
             val paths = segments - domain
             return UrlImpl(
                 scheme = protocol,
@@ -86,15 +90,15 @@ internal class UrlImpl(
         return UrlImpl(scheme, domain, s, p)
     }
 
-    override fun at(path: String): Url {
+    override fun at(path: String, query: Boolean): Url {
         val next = UrlImpl(path)
-        val p = QueryParamsImpl.from(entries = params.entries + next.params.entries)
+        val p = QueryParamsImpl.from(entries = (if (query) params.entries else emptyMap()) + next.params.entries)
         return UrlImpl(scheme, domain, next.segments, p)
     }
 
-    override fun child(url: String): Url {
+    override fun child(url: String, query: Boolean): Url {
         val next = UrlImpl(url)
-        val p = QueryParamsImpl.from(entries = params.entries + next.params.entries)
+        val p = QueryParamsImpl.from(entries = (if (query) params.entries else emptyMap()) + next.params.entries)
         return UrlImpl(scheme, domain, segments + next.segments, p)
     }
 
@@ -102,15 +106,15 @@ internal class UrlImpl(
 
     override fun trail(): Url = UrlImpl(scheme = "", domain = "", segments = segments, params = params)
 
-    override fun resolve(path: String): Url = when {
-        path.startsWith("/") -> at(path)
-        path.startsWith(".") -> relativePathResolver(path)
-        segments.isEmpty() -> at(path)
+    override fun resolve(path: String, query: Boolean): Url = when {
+        path.startsWith("/") -> at(path, query)
+        path.startsWith(".") -> relativePathResolver(path, query)
+        segments.isEmpty() -> at(path, query)
         Url(path).domain.isNotBlank() -> Url(path)
-        else -> child(path)
+        else -> child(path, query)
     }
 
-    private fun relativePathResolver(path: String): Url {
+    private fun relativePathResolver(path: String, query: Boolean): Url {
         var out = segments
         val next = UrlImpl(path)
         for (segment in next.segments) when {
@@ -118,7 +122,7 @@ internal class UrlImpl(
             segment == ".." -> out -= (out.lastOrNull() ?: "")
             else -> out += segment
         }
-        val p = QueryParamsImpl.from(entries = params.entries + next.params.entries)
+        val p = QueryParamsImpl.from(entries = (if (query) params.entries else emptyMap()) + next.params.entries)
         return UrlImpl(scheme, domain, out, p)
     }
 
