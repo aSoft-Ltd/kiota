@@ -13,7 +13,7 @@ fun includeSubs(base: String, path: String = base, vararg subs: String) {
     }
 }
 
-listOf("kommander", "kollections", "kase", "kotlinx-interoperable").forEach { includeBuild("../$it") }
+listOf("kommander", "kollections", "kase", "kotlinx-interoperable", "cinematic").forEach { includeBuild("../$it") }
 
 rootProject.name = "kiota"
 
@@ -22,4 +22,5 @@ includeSubs("kiota", ".", "url", "sse", "files")
 includeSubs("kiota-file", "file", "core", "system", "virtual", "compose")
 includeSubs("kiota-file-picker", "file/picker", "core", "system", "virtual")
 includeSubs("kiota-file-manager", "file/manager", "core", "system", "virtual")
+includeSubs("kiota-connection", "connection", "core", "http")
 includeSubs("kiota-samples", "samples", "shared", "desktop", "browser", "android")
