@@ -10,7 +10,7 @@ kotlin {
     if (Targeting.JVM) jvm { library() }
     if (Targeting.JS) js(IR) { library() }
     if (Targeting.WASM) wasmJs { library() }
-    if (Targeting.WASM) wasmWasi { library() }
+//    if (Targeting.WASM) wasmWasi { library() } // Because ktor client doesn't support wasi yet
     if (Targeting.OSX) osxTargets() else listOf()
 //    if (Targeting.NDK) ndkTargets() else listOf()
     if (Targeting.LINUX) linuxTargets() else listOf()
@@ -19,6 +19,14 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(projects.kiotaConnectionCore)
+            api(ktor.client.core)
+        }
+
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.kommander.core)
+            implementation(kotlinx.coroutines.test)
+            implementation(libs.kommander.coroutines)
         }
     }
 }
