@@ -1,6 +1,5 @@
 package kiota
 
-import android.Manifest
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
@@ -23,7 +22,7 @@ class AndroidConnectionObserver(
 
     private var callback: ConnectivityManager.NetworkCallback? = null
 
-//    @androidx.annotation.RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    //    @androidx.annotation.RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
     override fun start() {
         if (callback != null) return
         val cb = object : ConnectivityManager.NetworkCallback() {

@@ -28,18 +28,30 @@ kotlin {
     if (Targeting.WASM) wasmJs { library() }
     if (Targeting.WASM) wasmWasi { library() }
     if (Targeting.OSX) osxTargets() else listOf()
-//    if (Targeting.NDK) ndkTargets() else listOf()
     if (Targeting.LINUX) linuxTargets() else listOf()
     if (Targeting.MINGW) mingwTargets() else listOf()
 
     sourceSets {
-        commonMain.dependencies {
-            api(libs.cinematic.live.core)
-            api(kotlinx.coroutines.core)
+        val commonMain by getting {
+            dependencies {
+                api(libs.cinematic.live.core)
+                api(kotlinx.coroutines.core)
+            }
         }
 
-        wasmJsMain.dependencies {
-            implementation(kotlinx.browser)
+        val webMain by creating {
+            dependsOn(commonMain)
+            dependencies {
+                implementation(kotlinx.browser)
+            }
+        }
+
+        val jsMain by getting {
+            dependsOn(webMain)
+        }
+
+        val wasmJsMain by getting {
+            dependsOn(webMain)
         }
     }
 }
