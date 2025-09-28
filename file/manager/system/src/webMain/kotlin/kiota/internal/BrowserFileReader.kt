@@ -1,9 +1,9 @@
 package kiota.internal
 
-import org.w3c.files.FileReader
 import kiota.File
 import kiota.readBytesOf
 import kiota.readTextOf
+import org.w3c.files.FileReader
 import kiota.FileReader as MppFileReader
 
 internal class BrowserFileReader : MppFileReader {

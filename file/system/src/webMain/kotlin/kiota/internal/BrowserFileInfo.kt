@@ -4,6 +4,7 @@ import kiota.FileInfo
 import kiota.MemorySize
 import kiota.MemoryUnit
 import kiota.Multiplier
+import kotlin.js.toDouble
 
 class BrowserFileInfo(override val file: FileImpl) : FileInfo {
 

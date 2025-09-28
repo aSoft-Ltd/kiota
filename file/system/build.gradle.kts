@@ -24,10 +24,12 @@ configureAndroid("src/androidMain") {
 kotlin {
     if (Targeting.ANDROID) androidTarget { library() }
     if (Targeting.JVM) jvm { library() }
-    if (Targeting.JS) js(IR) { library() }
+    if (Targeting.JS) js(IR) { library() } // untill https://youtrack.jetbrains.com/issue/KT-80014 gets fixed // untill https://youtrack.jetbrains.com/issue/KT-80014 gets fixed
     if (Targeting.WASM) wasmJs { library() }
     val osxTargets = if (Targeting.OSX) (iosTargets() + macOsTargets()) else listOf()
     val linuxTargets = if (Targeting.LINUX) linuxTargets() else listOf()
+
+    applyDefaultHierarchyTemplate()
 
     sourceSets {
         val commonMain by getting {
@@ -54,8 +56,12 @@ kotlin {
             dependsOn(commonMain)
         }
 
-        val linuxMain by creating {
+        val linuxMain by getting {
             dependsOn(commonMain)
+        }
+
+        webMain.dependencies {
+            api(kotlinx.browser)
         }
 
         osxTargets.forEach {

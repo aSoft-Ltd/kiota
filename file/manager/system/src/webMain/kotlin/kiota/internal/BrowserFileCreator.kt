@@ -8,6 +8,9 @@ import org.khronos.webgl.Int8Array
 import org.khronos.webgl.set
 import org.w3c.files.File
 import org.w3c.files.FilePropertyBag
+import kotlin.js.JsAny
+import kotlin.js.toJsArray
+import kotlin.js.toJsString
 
 internal class BrowserFileCreator : FileCreator {
     override suspend fun create(content: ByteArray, name: String, type: Mime) = create(
@@ -24,7 +27,7 @@ internal class BrowserFileCreator : FileCreator {
         return array
     }
 
-    override suspend fun create(content: String, name: String, type: Mime) = create(
+    override suspend fun create(content: String, name: String, type: Mime) : FileCreationResult<FileCreationExplanation> = create(
         content = content.toJsString(),
         name = name,
         type = type

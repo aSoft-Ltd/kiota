@@ -8,7 +8,7 @@ description = "A kotlin multiplatform library for representing numbers on all pl
 
 kotlin {
     jvm { library() }
-    if (Targeting.JS) js(IR) { library() }
+    if (Targeting.JS) js(IR) { library() } // untill https://youtrack.jetbrains.com/issue/KT-80014 gets fixed // untill https://youtrack.jetbrains.com/issue/KT-80014 gets fixed
 //    if (Targeting.WASM) wasm { library() }
     val osxTargets = if (Targeting.OSX) osxTargets() else listOf()
 //    val ndkTargets = if (Targeting.NDK) ndkTargets() else listOf()

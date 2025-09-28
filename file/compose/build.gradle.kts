@@ -23,10 +23,10 @@ configureAndroid("src/androidMain") {
 }
 
 kotlin {
-    androidTarget { library() }
-    jvm { library() }
-    js { browser() }
-    wasmJs { browser() }
+    if(Targeting.ANDROID) androidTarget { library() }
+    if (Targeting.JVM) jvm { library() }
+    if (Targeting.JS) js { browser() } // untill https://youtrack.jetbrains.com/issue/KT-80014 gets fixed
+    if (Targeting.WASM) wasmJs { browser() }
 
     val ios = listOf(iosArm64(), iosX64(), iosSimulatorArm64())
 
@@ -63,7 +63,7 @@ kotlin {
             dependsOn(skiaMain)
         }
 
-        val jsMain by getting {
+        val jsMain by getting { // untill https://youtrack.jetbrains.com/issue/KT-80014 gets fixed
             dependsOn(skiaMain)
         }
 

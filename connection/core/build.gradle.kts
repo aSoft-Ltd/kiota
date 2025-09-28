@@ -5,7 +5,7 @@ plugins {
     id("tz.co.asoft.library")
 }
 
-description = "A kotlin multiplatform abstraction for choosing files"
+description = "A kotlin multiplatform abstraction for observing internet connection"
 
 configureAndroid("src/androidMain") {
     namespace = "tz.co.asoft.kiota.file.connection"
@@ -24,12 +24,14 @@ configureAndroid("src/androidMain") {
 kotlin {
     if (Targeting.ANDROID) androidTarget { library() }
     if (Targeting.JVM) jvm { library() }
-    if (Targeting.JS) js(IR) { library() }
+    if (Targeting.JS) js(IR) { library() } // untill https://youtrack.jetbrains.com/issue/KT-80014 gets fixed // untill https://youtrack.jetbrains.com/issue/KT-80014 gets fixed
     if (Targeting.WASM) wasmJs { library() }
     if (Targeting.WASM) wasmWasi { library() }
     if (Targeting.OSX) osxTargets() else listOf()
     if (Targeting.LINUX) linuxTargets() else listOf()
     if (Targeting.MINGW) mingwTargets() else listOf()
+
+    applyDefaultHierarchyTemplate()
 
     sourceSets {
         val commonMain by getting {
@@ -39,19 +41,8 @@ kotlin {
             }
         }
 
-        val webMain by creating {
-            dependsOn(commonMain)
-            dependencies {
-                implementation(kotlinx.browser)
-            }
-        }
-
-        val jsMain by getting {
-            dependsOn(webMain)
-        }
-
-        val wasmJsMain by getting {
-            dependsOn(webMain)
+        webMain.dependencies {
+            implementation(kotlinx.browser)
         }
     }
 }

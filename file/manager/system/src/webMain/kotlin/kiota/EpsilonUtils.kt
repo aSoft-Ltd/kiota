@@ -8,6 +8,8 @@ import org.w3c.files.Blob
 import org.w3c.files.FileReader
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import kotlin.js.JsString
+import kotlin.js.toDouble
 
 inline fun ArrayBuffer.toByteArray(): ByteArray {
     val array = Int8Array(this)
@@ -51,7 +53,6 @@ suspend fun FileReader.readBytesOf(
     onprogress = {
         val done = it.loaded.toDouble().toLong()
         val total = it.total.toDouble().toLong()
-        true
         // TODO("Update progress: $done / $total")
     }
     onabort = {
@@ -77,7 +78,6 @@ suspend fun FileReader.readTextOf(
     onprogress = {
         val done = it.loaded.toDouble().toLong()
         val total = it.total.toDouble().toLong()
-        true
         // TODO("Update progress: $done / $total")
     }
     onabort = {
@@ -88,7 +88,7 @@ suspend fun FileReader.readTextOf(
     }
     onloadend = {
         when (val res = result) {
-            is String -> cont.resume(res)
+            is JsString -> cont.resume(res.toString())
             else -> cont.resumeWithException(IllegalStateException("Failed to read bytes"))
         }
     }
