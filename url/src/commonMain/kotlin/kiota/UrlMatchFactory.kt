@@ -2,9 +2,6 @@
 
 package kiota
 
-import kollections.Collection
-import kollections.toList
-
 inline fun UrlMatch(
     route: Url,
     pattern: Url,

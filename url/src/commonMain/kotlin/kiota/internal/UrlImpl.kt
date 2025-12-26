@@ -6,30 +6,18 @@ import kiota.SegmentMatch
 import kiota.Url
 import kiota.UrlMatch
 import kiota.WildCardMatch
-import kollections.List
-import kollections.add
-import kollections.get
-import kollections.getOrNull
-import kollections.indices
-import kollections.isEmpty
-import kollections.iterator
-import kollections.joinToString
-import kollections.last
-import kollections.lastOrNull
-import kollections.minus
-import kollections.mutableListOf
-import kollections.mutableSetOf
-import kollections.plus
-import kollections.size
-import kollections.toList
 
 @PublishedApi
 internal class UrlImpl(
     override val scheme: String,
     override val domain: String,
+    override val port: Int?,
     override val segments: List<String>,
     override val params: QueryParamsImpl
 ) : Url {
+
+    override val host by lazy { if (port == null) domain else "$domain:$port" }
+
     companion object {
 
         private val String.isDomainLike: Boolean
@@ -55,15 +43,19 @@ internal class UrlImpl(
                 it.isNotBlank()
             }
             val first = segments.firstOrNull()
-            val domain = when {
+            val host = when {
                 protocol.isNotEmpty() -> first ?: ""
                 first?.isDomainLike == true -> first
                 else -> ""
             }
-            val paths = segments - domain
+            val paths = segments - host
+
+            val domain = host.substringBefore(":")
+            val port = host.substringAfter(":", "").toIntOrNull()
             return UrlImpl(
                 scheme = protocol,
                 domain = domain,
+                port = port,
                 segments = paths.toList(),
                 params = QueryParamsImpl.parse(params)
             )
@@ -87,24 +79,24 @@ internal class UrlImpl(
         val next = UrlImpl(url)
         val s = (segments - segments.last()) + next.segments
         val p = QueryParamsImpl.from(entries = params.entries + next.params.entries)
-        return UrlImpl(scheme, domain, s, p)
+        return UrlImpl(scheme, domain, port, s, p)
     }
 
     override fun at(path: String, query: Boolean): Url {
         val next = UrlImpl(path)
         val p = QueryParamsImpl.from(entries = (if (query) params.entries else emptyMap()) + next.params.entries)
-        return UrlImpl(scheme, domain, next.segments, p)
+        return UrlImpl(scheme, domain, port, next.segments, p)
     }
 
     override fun child(url: String, query: Boolean): Url {
         val next = UrlImpl(url)
         val p = QueryParamsImpl.from(entries = (if (query) params.entries else emptyMap()) + next.params.entries)
-        return UrlImpl(scheme, domain, segments + next.segments, p)
+        return UrlImpl(scheme, domain, port, segments + next.segments, p)
     }
 
     override val path = "/${segments.joinToString(separator = "/")}"
 
-    override fun trail(): Url = UrlImpl(scheme = "", domain = "", segments = segments, params = params)
+    override fun trail(): Url = UrlImpl(scheme = "", domain = "", port = null, segments = segments, params = params)
 
     override fun resolve(path: String, query: Boolean): Url = when {
         path.startsWith("/") -> at(path, query)
@@ -123,7 +115,7 @@ internal class UrlImpl(
             else -> out += segment
         }
         val p = QueryParamsImpl.from(entries = (if (query) params.entries else emptyMap()) + next.params.entries)
-        return UrlImpl(scheme, domain, out, p)
+        return UrlImpl(scheme, domain, port, out, p)
     }
 
     override val root = buildString {
@@ -131,9 +123,8 @@ internal class UrlImpl(
             append(scheme)
             append("://")
         }
-        if (domain.isNotBlank()) {
-            append(domain)
-        }
+        if (domain.isNotBlank()) append(domain)
+        if (port != null) append(":$port")
     }
 
     override fun withParams(vararg params: Pair<String, String>): Url {
@@ -141,7 +132,7 @@ internal class UrlImpl(
             putAll(this@UrlImpl.params.entries)
             putAll(params)
         }
-        return UrlImpl(scheme, domain, segments, QueryParamsImpl.from(p))
+        return UrlImpl(scheme, domain, port, segments, QueryParamsImpl.from(p))
     }
 
     override fun withParams(name: String, value: Number): Url = withParams(name to "$value")
@@ -157,12 +148,14 @@ internal class UrlImpl(
             if (routeSegment.matches(patternSegment) == null) break
             matchingSegments.add(routeSegment)
         }
-        return UrlImpl(url.scheme, url.domain, (url.segments - matchingSegments), params)
+        return UrlImpl(url.scheme, url.domain, url.port, (url.segments - matchingSegments), params)
     }
 
     override fun rebase(url: String) = rebase(UrlImpl(url))
 
     override fun matches(pattern: String): UrlMatch? = matches(UrlImpl(pattern))
+
+    override fun withScheme(scheme: String): Url = UrlImpl(scheme, domain, port, segments, params)
 
     override fun matches(pattern: Url): UrlMatch? {
         if (pattern.path == "/" && path != "/") return null

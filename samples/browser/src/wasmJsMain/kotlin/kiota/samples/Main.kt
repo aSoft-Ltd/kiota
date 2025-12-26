@@ -5,19 +5,17 @@ package kiota.samples
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.InternalComposeUiApi
-import androidx.compose.ui.window.CanvasBasedWindow
-import org.jetbrains.compose.resources.configureWebResources
+import androidx.compose.ui.window.ComposeViewport
 import kiota.BrowserFileManager
 import kiota.Sample
+import org.jetbrains.compose.resources.configureWebResources
 
-@ExperimentalComposeUiApi
 fun main() {
-    println("Hello World!")
     configureWebResources {
         resourcePathMapping { "/$it" }
     }
 
-    CanvasBasedWindow(canvasElementId = "app") {
+    ComposeViewport("app") {
         MaterialTheme {
             Sample(files = BrowserFileManager())
         }

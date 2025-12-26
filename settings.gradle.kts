@@ -13,7 +13,7 @@ fun includeSubs(base: String, path: String = base, vararg subs: String) {
     }
 }
 
-listOf("kommander", "kollections", "kase", "kotlinx-interoperable", "cinematic").forEach { includeBuild("../$it") }
+listOf("kommander", "kase", "kotlinx-interoperable", "cinematic").forEach { includeBuild("../$it") }
 
 rootProject.name = "kiota"
 

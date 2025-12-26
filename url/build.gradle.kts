@@ -19,7 +19,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(libs.kase.optional)
-            api(libs.kollections.interoperable)
         }
 
         commonTest.dependencies {

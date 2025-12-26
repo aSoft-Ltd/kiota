@@ -1,7 +1,5 @@
 package kiota
 
-import kollections.get
-import kollections.last
 import kommander.expect
 import kotlin.test.Test
 

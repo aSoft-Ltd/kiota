@@ -4,11 +4,6 @@ import kiota.DynamicParamMatch
 import kiota.ExactMatch
 import kiota.SegmentMatch
 import kiota.WildCardMatch
-import kollections.Collection
-import kollections.filterIsInstance
-import kollections.forEachIndexed
-import kollections.joinToString
-import kollections.associate
 
 
 private fun SegmentMatch.toScore() = when (this) {

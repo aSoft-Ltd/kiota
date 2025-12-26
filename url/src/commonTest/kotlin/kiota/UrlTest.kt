@@ -1,7 +1,5 @@
 package kiota
 
-import kollections.joinToString
-import kollections.size
 import kommander.expect
 import kotlin.test.Test
 
@@ -172,14 +170,14 @@ class UrlTest {
     @Test
     fun should_detect_domains_with_port_number_but_no_dot() {
         val url = Url("http://localhost:4000/users/890/info/files")
-        expect(url.domain).toBe("localhost:4000")
+        expect(url.host).toBe("localhost:4000")
         expect(url.path).toBe("/users/890/info/files")
     }
 
     @Test
     fun should_have_paths_with_dots_int_them() {
         val url = Url("http://localhost:4000/content.html")
-        expect(url.domain).toBe("localhost:4000")
+        expect(url.host).toBe("localhost:4000")
         expect(url.path).toBe("/content.html")
         expect(url.segments.joinToString("/")).toBe("content.html")
     }
@@ -200,17 +198,32 @@ class UrlTest {
     fun should_be_able_to_detect_local_host_as_a_domain() {
         val url = Url("http://localhost/users")
         expect(url.domain).toBe("localhost")
+        expect(url.host).toBe("localhost")
     }
 
     @Test
     fun should_be_able_to_detect_domain_and_port_when_localhost_is_involved() {
         val url = Url("http://localhost:80/users")
-        expect(url.domain).toBe("localhost:80")
+        expect(url.host).toBe("localhost:80")
+        expect(url.domain).toBe("localhost")
+        expect(url.port).toBe(80)
     }
 
     @Test
     fun should_be_able_to_detect_ip_addresses_as_a_domain() {
         val url = Url("http://192.168.0.1/users")
         expect(url.domain).toBe("192.168.0.1")
+    }
+
+    @Test
+    fun should_return_a_domain_with_a_different_scheme() {
+        val url = Url("https://asoft.co.tz:4343/test/1/2/3")
+        expect(url.withScheme("wss").toString()).toBe("wss://asoft.co.tz:4343/test/1/2/3")
+    }
+
+    @Test
+    fun should_extract_all_the_pars() {
+        val url = Url("https://asoft.co.tz:4343/test/1/2/3")
+        expect(url.segments).toBe(listOf("test", "1", "2", "3"))
     }
 }

@@ -9,9 +9,6 @@ import kiota.internal.pretty
 import kiota.internal.toEvaluatedUrl
 import kiota.internal.toParams
 import kiota.internal.toScore
-import kollections.List
-import kollections.Map
-import kollections.get
 import kotlinx.JsExport
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty

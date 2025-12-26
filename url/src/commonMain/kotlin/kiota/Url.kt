@@ -3,7 +3,6 @@
 
 package kiota
 
-import kollections.List
 import kotlinx.JsExport
 import kotlinx.JsExportIgnore
 import kotlin.js.JsName
@@ -22,9 +21,27 @@ interface Url {
     /**
      * The domain of the url (i.e. test.com)
      * e.g. For a url with https://test.com/john/doe
-     * domain should give you "test.com"
+     * host should give you "test.com"
+     * e.g. For a url with https://www.test.com:8080/john/doe
+     * host should give you "test.com"
      */
     val domain: String
+
+    /**
+     * The port of the url (i.e. 443)
+     * e.g. For a url with https://test.com:443/john/doe
+     * port should give you 443
+     */
+    val port: Int?
+
+    /**
+     * The host of the url (i.e. test.com)
+     * e.g. For a url with https://test.com/john/doe
+     * host should give you "test.com"
+     * e.g. For a url with https://www.test.com:8080/john/doe
+     * host should give you "test.com:8080"
+     */
+    val host: String
 
     /**
      * The list of the path segments of the url
@@ -97,6 +114,12 @@ interface Url {
      * @return the [path] as a [Url] eliminating all its [root] ([scheme]:[domain])
      */
     fun trail(): Url
+
+
+    /**
+     * @return the same url with the provided [scheme]
+     */
+    fun withScheme(scheme: String): Url
 
     /**
      * @return the same url with query params
