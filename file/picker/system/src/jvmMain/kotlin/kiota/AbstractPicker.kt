@@ -13,6 +13,9 @@ import javax.swing.SwingUtilities
 import kotlin.coroutines.resume
 
 abstract class AbstractPicker {
+
+    private val chooser by lazy { JFileChooser() }
+
     protected suspend fun show(
         mimes: Collection<Mime>,
         limit: PickerLimit
@@ -21,7 +24,7 @@ abstract class AbstractPicker {
         if (limit.count <= 0) return Cancelled
         if (limit.size <= MemorySize.Zero) return Cancelled
 
-        val chooser = JFileChooser().apply {
+        chooser.apply {
             fileSelectionMode = JFileChooser.FILES_ONLY
             isMultiSelectionEnabled = limit.count > 1
             fileFilter = MimeFileFilter(mimes, limit.size)
