@@ -20,7 +20,7 @@ inline fun Url(
 ): Url = UrlImpl(scheme, domain, null, paths.toList(), QueryParamsImpl.empty)
 
 @JsExport
-@JsName("createUrlFrom")
+@JsName("createUrlWith")
 inline fun Url(
     scheme: String = "",
     host: String = "",
