@@ -21,4 +21,10 @@ class UrlRebaseTest {
         val url = Url("/")
         expect(url.rebase("/test/john/doe").path).toBe("/test/john/doe")
     }
+
+    @Test
+    fun should_rebase_a_two_dynamic_routes_with_the_same_string() {
+        val url = Url("/campuses/{campus}/*")
+        expect(url.rebase("/campuses/1/curriculums/1").path).toBe("/curriculums/1")
+    }
 }

@@ -69,7 +69,7 @@ internal class UrlImpl(
     override fun equals(other: Any?): Boolean = when (other) {
         is String -> toString() == other
         is Url -> toString() == other.toString()
-        else -> false
+        else -> toString() == other.toString()
     }
 
     override fun hashCode() = toString().hashCode()
@@ -139,16 +139,22 @@ internal class UrlImpl(
 
     override fun withParams(name: String, value: String): Url = withParams(name to value)
 
+    private fun <E> List<E>.toMap(): MutableMap<Int, E> {
+        val map = mutableMapOf<Int, E>()
+        for (i in indices) map[i] = get(i)
+        return map
+    }
+
     override fun rebase(url: Url): Url {
-        val matchingSegments = mutableSetOf<String>()
+        val segments = url.segments.toMap()
         for (s in url.segments.indices) {
-            val patternSegment = segments.getOrNull(s) ?: break
-            if (patternSegment == "*" && s == segments.indices.last) break
+            val patternSegment = this@UrlImpl.segments.getOrNull(s) ?: break
+            if (patternSegment == "*" && s == this@UrlImpl.segments.indices.last) break
             val routeSegment = url.segments.getOrNull(s) ?: break
             if (routeSegment.matches(patternSegment) == null) break
-            matchingSegments.add(routeSegment)
+            segments.remove(s)
         }
-        return UrlImpl(url.scheme, url.domain, url.port, (url.segments - matchingSegments), params)
+        return UrlImpl(url.scheme, url.domain, url.port, segments.values.toList(), params)
     }
 
     override fun rebase(url: String) = rebase(UrlImpl(url))

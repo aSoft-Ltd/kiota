@@ -90,14 +90,14 @@ interface Url {
     fun resolve(path: String, query: Boolean = false): Url
 
     @JsName("rebaseUrl")
-            /**
-             * Removes the base common base of between this [Url] and the provided [url]
-             *
-             * e.g.
-             * 1. Rebasing /posts/\* with /posts/1/test should result in /1/test
-             * 2. Rebasing /posts/{uid}/\* with /posts/1/test should result in /test
-             * 3. Rebasing / with /test/john/doe should result in /test/john/doe
-             */
+    /**
+     * Removes the base common base of between this [Url] and the provided [url]
+     *
+     * e.g.
+     * 1. Rebasing /posts/\* with /posts/1/test should result in /1/test
+     * 2. Rebasing /posts/{uid}/\* with /posts/1/test should result in /test
+     * 3. Rebasing / with /test/john/doe should result in /test/john/doe
+     */
     fun rebase(url: Url): Url
 
     /**

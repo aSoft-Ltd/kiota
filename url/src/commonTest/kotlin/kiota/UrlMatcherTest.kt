@@ -1,6 +1,7 @@
 package kiota
 
 import kommander.expect
+import kommander.toBeGreaterThan
 import kotlin.test.Test
 import kotlin.test.fail
 
@@ -102,5 +103,19 @@ class UrlMatcherTest {
     fun should_match_wild_card_root_trailing() {
         val match = Url("/photos").matches("/*")
         expect(match).toBeNonNull()
+    }
+
+    @Test
+    fun should_match_routes_having_the_same_value_for_two_dynamic_parameters() {
+        val match = Url("/campuses/1/curriculums/1").matches(Url("/campuses/{campus}/curriculums/{curriculum}")) ?: fail()
+        expect(match).toBeNonNull()
+
+        val campus by match.params
+        val curriculum by match.params
+
+        expect(campus).toBe("1")
+        expect(curriculum).toBe("1")
+
+        expect(match.score).toBeGreaterThan(20)
     }
 }
