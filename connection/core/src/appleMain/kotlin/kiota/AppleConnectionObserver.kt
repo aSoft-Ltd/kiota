@@ -13,7 +13,7 @@ import platform.Network.nw_path_status_unsatisfied
 import platform.darwin.DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL
 import platform.darwin.dispatch_queue_create
 
-internal class AppleConnectionObserver(
+class AppleConnectionObserver(
     private val verifier: ConnectionVerifier,
     private val scope: CoroutineScope,
 ) : ConnectionObserver {

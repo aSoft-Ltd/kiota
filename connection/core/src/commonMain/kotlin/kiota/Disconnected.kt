@@ -1,3 +1,3 @@
 package kiota
 
-data object Disconnected : Connection
+data object Disconnected : Connection, Connectivity

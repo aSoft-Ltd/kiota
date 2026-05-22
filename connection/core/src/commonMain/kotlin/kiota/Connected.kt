@@ -1,3 +1,3 @@
 package kiota
 
-data class Connected(val verified: String? = null) : Connection
+data class Connected(val verified: String? = null) : Connection, Connectivity
