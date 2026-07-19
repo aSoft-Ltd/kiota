@@ -73,7 +73,7 @@ kotlin {
         }
     }
 
-    val ios = listOf(iosArm64(), iosX64(), iosSimulatorArm64())
+    val ios = listOf(iosArm64(), iosSimulatorArm64())
 
     for (device in ios) {
         device.binaries.framework {

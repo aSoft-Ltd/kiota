@@ -28,7 +28,7 @@ kotlin {
     if (Targeting.JS) js { browser() } // untill https://youtrack.jetbrains.com/issue/KT-80014 gets fixed
     if (Targeting.WASM) wasmJs { browser() }
 
-    val ios = listOf(iosArm64(), iosX64(), iosSimulatorArm64())
+    val ios = listOf(iosArm64(), iosSimulatorArm64())
 
     sourceSets {
         val commonMain by getting {
