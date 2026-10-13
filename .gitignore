@@ -15,6 +15,7 @@ classes
 **/*.hprof
 .DS_Store
 **/.DS_Store
+xcuserdata/
 
 # Compiled class file
 *.class
