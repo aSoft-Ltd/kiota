@@ -31,6 +31,21 @@ interface Application : Mime {
         override val text: String get() = "application/gzip"
     }
 
+    data object SevenZip : Application {
+        override val name: String get() = "7Z"
+        override val text: String get() = "application/x-7z-compressed"
+    }
+
+    data object RAR : Application {
+        override val name: String get() = "RAR"
+        override val text: String get() = "application/vnd.rar"
+    }
+
+    data object TAR : Application {
+        override val name: String get() = "TAR"
+        override val text: String get() = "application/x-tar"
+    }
+
     data object OctetStream : Application {
         override val name: String get() = "OctetStream"
         override val text: String = "application/octet-stream"

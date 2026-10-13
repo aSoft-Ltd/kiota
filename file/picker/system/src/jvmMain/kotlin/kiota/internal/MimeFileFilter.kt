@@ -11,6 +11,7 @@ internal class MimeFileFilter(
     private val limit: MemorySize,
 ) : FileFilter() {
     override fun accept(file: File): Boolean {
+        if (file.isDirectory) return true
         if (mimes.none { it.matches(file.extension) }) return false
         return file.length().bytes <= limit
     }
