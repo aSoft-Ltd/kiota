@@ -12,9 +12,13 @@ internal class MimeFileFilter(
 ) : FileFilter() {
     override fun accept(file: File): Boolean {
         if (file.isDirectory) return true
-        if (mimes.none { it.matches(file.extension) }) return false
-        return file.length().bytes <= limit
+        if (file.length().bytes > limit) return false
+        return mimes.any { it.matches(file.extension) }
     }
 
-    override fun getDescription(): String = mimes.map { it.name }.firstOrNull() ?: "All files"
+    override fun getDescription(): String {
+        if(mimes.isEmpty()) return "All files"
+        if(mimes.size == 1) return mimes.first().name
+        return mimes.joinToString(" | ") { it.name }
+    }
 }

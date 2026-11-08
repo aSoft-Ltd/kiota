@@ -17,8 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
 import kiota.file.PickerLimit
 import kiota.file.mime.All
-import kiota.file.mime.Application
 import kiota.file.mime.Document
+import kiota.file.mime.Image
 import kiota.file.mime.Mime
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -92,6 +92,21 @@ internal fun FilesPicker(
                 }
             ) {
                 Text("Pick Pdf")
+            }
+
+            Button(
+                onClick = {
+                    scope.launch {
+                        when (val result = files.picker(mimes = listOf(Document.PDF, Image.PNG)).open()) {
+                            is Cancelled -> {}
+                            is Denied -> denied.value = true
+                            is Failure -> errors += result
+                            is File -> picked += result
+                        }
+                    }
+                }
+            ) {
+                Text("Pick Image + Pdf")
             }
         }
 
