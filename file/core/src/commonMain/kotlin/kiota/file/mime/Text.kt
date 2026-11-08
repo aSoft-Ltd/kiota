@@ -4,6 +4,8 @@ interface Text : Mime {
     companion object : Text {
         override val name: String = "Text"
         override val text: String = "text/*"
+
+        val All by lazy { listOf(Plain, HTML, CSS, XML, CSV, Markdown) }
     }
 
     data object Plain : Text {

@@ -4,6 +4,14 @@ interface Audio : Mime {
     companion object : Audio {
         override val name: String = "Audio"
         override val text: String = "audio/*"
+
+        val All by lazy {
+            listOf(
+                MP3, MPEG, AAC, WAV, FLAC, OGG, WMA, ALAC,
+                APE, AMR, MID, M4A, WavPack, AIF, CAF, DTS,
+                DSD, MKA, M3U, M3U8, PLS, WPL
+            )
+        }
     }
 
     data object MP3 : Audio {

@@ -4,6 +4,8 @@ interface Application : Mime {
     companion object : Application {
         override val name: String = "Application"
         override val text: String = "application/*"
+
+        val All by lazy { listOf(JSON, Document.PDF, XML, ZIP, GZIP, SevenZip, RAR, TAR, OctetStream) }
     }
 
     data object JSON : Application {
