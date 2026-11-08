@@ -4,6 +4,8 @@ interface Document : Application {
     companion object : Document {
         override val name: String = "Document"
         override val text: String = "application/*"
+
+        val All by lazy { listOf(PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, RTF) }
     }
 
     data object PDF : Document {
